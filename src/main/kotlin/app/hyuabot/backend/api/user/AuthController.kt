@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -76,5 +77,24 @@ class AuthController(
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .header(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
             .build()
+    }
+
+    @PostMapping("/validate", produces = ["application/json"])
+    fun validate(@RequestHeader("Authorization") accessToken: String): ResponseEntity<String> {
+        if (!authService.validate(accessToken)) {
+            val response = Response.SuccessResponse(
+                message = "VALID_ACCESS_TOKEN",
+            )
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Response.objectMapper.writeValueAsString(response))
+        }
+        val response = Response.ErrorResponse(
+            message = "INVALID_ACCESS_TOKEN",
+            path = "/api/auth/validate",
+        )
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(Response.objectMapper.writeValueAsString(response))
     }
 }
