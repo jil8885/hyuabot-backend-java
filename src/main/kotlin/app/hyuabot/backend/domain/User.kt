@@ -1,6 +1,6 @@
 package app.hyuabot.backend.domain
 
-import app.hyuabot.backend.api.user.request.SignUpRequest
+import app.hyuabot.backend.dto.request.SignUpRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

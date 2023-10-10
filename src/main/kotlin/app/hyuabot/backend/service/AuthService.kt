@@ -1,8 +1,7 @@
-package app.hyuabot.backend.api.user
+package app.hyuabot.backend.service
 
-import app.hyuabot.backend.api.user.response.TokenResponse
-import app.hyuabot.backend.config.jwt.JWTTokenProvider
-import app.hyuabot.backend.config.redis.RedisService
+import app.hyuabot.backend.dto.response.TokenResponse
+import app.hyuabot.backend.security.JWTTokenProvider
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.core.Authentication

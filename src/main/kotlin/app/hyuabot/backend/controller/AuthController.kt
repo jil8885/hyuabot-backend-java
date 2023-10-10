@@ -1,8 +1,10 @@
-package app.hyuabot.backend.api.user
+package app.hyuabot.backend.controller
 
-import app.hyuabot.backend.api.Response
-import app.hyuabot.backend.api.user.request.LoginRequest
-import app.hyuabot.backend.api.user.request.SignUpRequest
+import app.hyuabot.backend.dto.response.Response
+import app.hyuabot.backend.service.AuthService
+import app.hyuabot.backend.service.UserService
+import app.hyuabot.backend.dto.request.LoginRequest
+import app.hyuabot.backend.dto.request.SignUpRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie

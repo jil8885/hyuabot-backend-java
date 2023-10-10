@@ -1,4 +1,4 @@
-package app.hyuabot.backend.config.jwt
+package app.hyuabot.backend.security
 
 import io.jsonwebtoken.IncorrectClaimException
 import jakarta.servlet.FilterChain

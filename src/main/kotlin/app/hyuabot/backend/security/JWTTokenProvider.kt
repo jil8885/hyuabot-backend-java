@@ -1,7 +1,7 @@
-package app.hyuabot.backend.config.jwt
+package app.hyuabot.backend.security
 
-import app.hyuabot.backend.api.user.response.TokenResponse
-import app.hyuabot.backend.config.redis.RedisService
+import app.hyuabot.backend.dto.response.TokenResponse
+import app.hyuabot.backend.service.RedisService
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys

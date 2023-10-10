@@ -1,9 +1,9 @@
 package app.hyuabot.backend.config
 
-import app.hyuabot.backend.config.jwt.JWTAccessDeniedHandler
-import app.hyuabot.backend.config.jwt.JWTAuthenticationEntryPoint
-import app.hyuabot.backend.config.jwt.JWTAuthenticationFilter
-import app.hyuabot.backend.config.jwt.JWTTokenProvider
+import app.hyuabot.backend.security.JWTAccessDeniedHandler
+import app.hyuabot.backend.security.JWTAuthenticationEntryPoint
+import app.hyuabot.backend.security.JWTAuthenticationFilter
+import app.hyuabot.backend.security.JWTTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager

@@ -1,4 +1,4 @@
-package app.hyuabot.backend.config.redis
+package app.hyuabot.backend.service
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service

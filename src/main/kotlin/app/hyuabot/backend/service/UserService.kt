@@ -1,7 +1,7 @@
-package app.hyuabot.backend.api.user
+package app.hyuabot.backend.service
 
-import app.hyuabot.backend.api.user.repository.UserRepository
-import app.hyuabot.backend.api.user.request.SignUpRequest
+import app.hyuabot.backend.repository.UserRepository
+import app.hyuabot.backend.dto.request.SignUpRequest
 import app.hyuabot.backend.domain.User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

@@ -1,4 +1,4 @@
-package app.hyuabot.backend.api.user.repository
+package app.hyuabot.backend.security
 
 import app.hyuabot.backend.domain.User
 import org.springframework.security.core.GrantedAuthority

@@ -1,4 +1,4 @@
-package app.hyuabot.backend.api.user.request
+package app.hyuabot.backend.dto.request
 
 data class SignUpRequest (
     val username: String,

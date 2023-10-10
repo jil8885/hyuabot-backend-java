@@ -1,4 +1,4 @@
-package app.hyuabot.backend.api.user.response
+package app.hyuabot.backend.dto.response
 
 data class TokenResponse (
     val accessToken: String,

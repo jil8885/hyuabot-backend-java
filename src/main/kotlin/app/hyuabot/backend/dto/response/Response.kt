@@ -1,4 +1,4 @@
-package app.hyuabot.backend.api
+package app.hyuabot.backend.dto.response
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.time.LocalDateTime
