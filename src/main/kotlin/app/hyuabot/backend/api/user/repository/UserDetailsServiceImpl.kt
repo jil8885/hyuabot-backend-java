@@ -1,0 +1,18 @@
+package app.hyuabot.backend.api.user.repository
+
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Component
+
+@Component
+class UserDetailsServiceImpl(private val userRepository: UserRepository): UserDetailsService {
+    override fun loadUserByUsername(username: String?): UserDetails {
+        val user = userRepository.findByUserID(username!!)
+        if (user != null) {
+            return UserDetailsImpl(user)
+        } else {
+            throw UsernameNotFoundException("USER_NOT_FOUND")
+        }
+    }
+}

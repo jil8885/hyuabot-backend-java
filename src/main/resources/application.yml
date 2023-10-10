@@ -7,3 +7,23 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+    open-in-view: false
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      repositories:
+        enabled: false
+  mvc:
+    servlet:
+      load-on-startup: 1
+jwt:
+  secret: ${JWT_SECRET}
+  refresh-token-validity-in-seconds: 1209600
+  access-token-validity-in-seconds: 43200

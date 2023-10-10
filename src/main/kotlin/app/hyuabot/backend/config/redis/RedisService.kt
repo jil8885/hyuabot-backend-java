@@ -1,0 +1,28 @@
+package app.hyuabot.backend.config.redis
+
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional(readOnly = true)
+class RedisService(private val redisTemplate: RedisTemplate<String, String>) {
+    @Transactional
+    fun setValues(key: String, value: String) {
+        redisTemplate.opsForValue().set(key, value)
+    }
+
+    @Transactional
+    fun setValuesWithTimeout(key: String, value: String, timeout: Long) {
+        redisTemplate.opsForValue().set(key, value, timeout)
+    }
+
+    fun getValues(key: String): String? {
+        return redisTemplate.opsForValue().get(key)
+    }
+
+    @Transactional
+    fun deleteValues(key: String) {
+        redisTemplate.delete(key)
+    }
+}
