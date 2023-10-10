@@ -107,6 +107,7 @@ class AuthController(
                 .httpOnly(true)
                 .secure(true)
                 .maxAge(COOKIE_EXPIRE_TIME)
+                .path("/")
                 .build()
             return ResponseEntity
                 .status(HttpStatus.OK)
@@ -123,5 +124,18 @@ class AuthController(
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .build()
         }
+    }
+
+    @PostMapping("/logout")
+    fun logout(@RequestHeader("Authorization") accessToken: String): ResponseEntity<Void> {
+        authService.logout(accessToken)
+        val cookie = ResponseCookie.from("refresh-token", "")
+            .maxAge(0)
+            .path("/")
+            .build()
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
+            .build()
     }
 }
