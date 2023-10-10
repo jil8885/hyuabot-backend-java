@@ -1,8 +1,11 @@
 package app.hyuabot.backend.api.user
 
 import app.hyuabot.backend.api.Response
+import app.hyuabot.backend.api.user.request.LoginRequest
 import app.hyuabot.backend.api.user.request.SignUpRequest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,7 +21,7 @@ class AuthController(
     private val encoder: BCryptPasswordEncoder,
 ) {
     companion object {
-        const val COOKIE_EXPIRE_TIME = 60 * 60 * 24 * 90
+        const val COOKIE_EXPIRE_TIME: Long = 60 * 60 * 24 * 90
     }
 
     @PostMapping(
@@ -54,5 +57,24 @@ class AuthController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(Response.objectMapper.writeValueAsString(response))
+    }
+
+    @PostMapping(
+        "/login",
+        consumes = ["application/json"],
+        produces = ["application/json"],
+    )
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<String> {
+        val response = authService.login(request.username, request.password)
+        val cookie = ResponseCookie.from("refresh-token", response.refreshToken)
+            .httpOnly(true)
+            .maxAge(COOKIE_EXPIRE_TIME)
+            .path("/")
+            .build()
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
+            .build()
     }
 }

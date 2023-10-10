@@ -12,7 +12,7 @@ class JWTAuthenticationFilter(private val jwtTokenProvider: JWTTokenProvider): O
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val accessToken = resolveAccessToken(request)
         try {
-            if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken!!)) {
+            if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
                 val authentication = jwtTokenProvider.getAuthentication(accessToken)
                 SecurityContextHolder.getContext().authentication = authentication
             }

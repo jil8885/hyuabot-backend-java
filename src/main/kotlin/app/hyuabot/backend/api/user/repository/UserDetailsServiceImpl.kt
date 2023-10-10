@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class UserDetailsServiceImpl(private val userRepository: UserRepository): UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
         val user = userRepository.findByUserID(username!!)
-        if (user != null) {
+        if (user != null && user.active) {
             return UserDetailsImpl(user)
         } else {
             throw UsernameNotFoundException("USER_NOT_FOUND")
