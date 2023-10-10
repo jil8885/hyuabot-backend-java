@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -96,5 +97,31 @@ class AuthController(
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .body(Response.objectMapper.writeValueAsString(response))
+    }
+
+    @PostMapping("/reissue")
+    fun reissue(@CookieValue("refresh-token") refreshToken: String, @RequestHeader("Authorization") accessToken: String): ResponseEntity<Void> {
+        val newToken = authService.reissue(accessToken, refreshToken)
+        if (newToken != null) {
+            val cookie = ResponseCookie.from("refresh-token", newToken.refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(COOKIE_EXPIRE_TIME)
+                .build()
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${newToken.accessToken}")
+                .build()
+        } else {
+            val cookie = ResponseCookie.from("refresh-token", "")
+                .maxAge(0)
+                .path("/")
+                .build()
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build()
+        }
     }
 }
