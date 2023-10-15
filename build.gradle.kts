@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 group = "app.hyuabot"
@@ -28,6 +29,7 @@ dependencies {
     implementation("org.postgresql", "postgresql", "42.6.0")
     // Serialization
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.+")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     // Security
     implementation("org.springframework.boot:spring-boot-starter-security:3.1.4")
     // Redis
