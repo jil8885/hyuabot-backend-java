@@ -20,4 +20,11 @@ object Response {
     ) {
         constructor(message: String) : this(message, LocalDateTime.now().toString())
     }
+
+    data class ContentResponse (
+            val content: Any,
+            val timestamp: String,
+    ) {
+        constructor(content: Any) : this(content, LocalDateTime.now().toString())
+    }
 }
