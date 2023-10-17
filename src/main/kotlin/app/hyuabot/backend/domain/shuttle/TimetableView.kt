@@ -1,4 +1,4 @@
-package app.hyuabot.backend.domain
+package app.hyuabot.backend.domain.shuttle
 
 import app.hyuabot.backend.dto.database.ShuttleTimetableViewPK
 import jakarta.persistence.*
@@ -9,7 +9,7 @@ import java.time.LocalTime
 @Table(name = "shuttle_timetable_view")
 @Immutable
 @IdClass(ShuttleTimetableViewPK::class)
-data class ShuttleTimetableView (
+data class TimetableView (
     @Column(name = "seq")
     @Id
     val seq: Int,

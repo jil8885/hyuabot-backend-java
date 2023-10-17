@@ -1,13 +1,13 @@
-package app.hyuabot.backend.repository
+package app.hyuabot.backend.repository.shuttle
 
-import app.hyuabot.backend.domain.ShuttleTimetableView
+import app.hyuabot.backend.domain.shuttle.TimetableView
 import app.hyuabot.backend.dto.database.ShuttleTimetableViewPK
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface ShuttleTimetableViewRepository: JpaRepository<ShuttleTimetableView, ShuttleTimetableViewPK> {
+interface TimetableViewRepository: JpaRepository<TimetableView, ShuttleTimetableViewPK> {
     @Query("SELECT * FROM shuttle_timetable_view WHERE " +
         "(period_type = :periodType OR :periodType IS NULL) AND " +
         "(weekday = :isWeekdays OR :isWeekdays IS NULL) AND " +
@@ -18,5 +18,5 @@ interface ShuttleTimetableViewRepository: JpaRepository<ShuttleTimetableView, Sh
         isWeekdays: Boolean?,
         stopName: String?,
         pageable: Pageable,
-    ): Page<ShuttleTimetableView>
+    ): Page<TimetableView>
 }
