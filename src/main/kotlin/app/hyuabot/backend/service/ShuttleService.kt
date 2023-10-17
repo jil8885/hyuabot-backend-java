@@ -28,6 +28,7 @@ class ShuttleService(
         ).map {
             ShuttleTimetableViewItem(
                 it.seq,
+                it.periodType,
                 it.stopName,
                 it.isWeekday,
                 it.routeName,
