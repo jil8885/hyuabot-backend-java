@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.NullPointerException
 import java.time.LocalTime
 
 @Service
@@ -70,34 +71,23 @@ class ShuttleService(
 
     @Transactional
     fun deleteShuttleTimetable(seq: Int) {
-        shuttleTimetableRepository.delete(
-            shuttleTimetableRepository.findById(seq).orElseThrow {
-                throw Exception(
-                    "NOT_FOUND"
-                )
-            }
-        )
+        val item = shuttleTimetableRepository.findById(seq).orElseThrow {
+            throw NullPointerException("SPECIFIED_SEQ_NOT_FOUND")
+        }
+        shuttleTimetableRepository.delete(item)
     }
 
     @Transactional
     fun patchShuttleTimetable(
         seq: Int,
-        item: PatchTimetableRequest,
+        payload: PatchTimetableRequest,
     ) {
-        try {
-            shuttleTimetableRepository.findById(seq).orElseThrow {
-                throw Exception(
-                    "NOT_FOUND"
-                )
-            }.apply {
-                this.periodType = item.periodType ?: this.periodType
-                this.isWeekday = item.isWeekday ?: this.isWeekday
-                this.routeName = item.routeName ?: this.routeName
-                this.departureTime =
-                    LocalTime.parse(item.departureTime) ?: this.departureTime
-            }
-        } catch (e: Exception) {
-            throw Exception(e.message)
+        val item = shuttleTimetableRepository.findById(seq).orElseThrow {
+            throw NullPointerException("SPECIFIED_SEQ_NOT_FOUND")
         }
+        payload.periodType?.let { item.periodType = it }
+        payload.isWeekday?.let { item.isWeekday = it }
+        payload.routeName?.let { item.routeName = it }
+        payload.departureTime?.let { item.departureTime = LocalTime.parse(it) }
     }
 }
