@@ -18,6 +18,4 @@ data class Timetable (
     var routeName: String,
     @Column(name = "departure_time")
     var departureTime: LocalTime,
-) {
-    constructor() : this(0, "", false, "", LocalTime.of(0, 0))
-}
+)

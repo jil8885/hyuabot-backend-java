@@ -26,6 +26,4 @@ data class TimetableView (
     val stopName: String,
     @Column(name = "departure_time")
     val departureTime: LocalTime,
-) {
-    constructor() : this(0, "", false, "", "", "", LocalTime.of(0, 0))
-}
+)
