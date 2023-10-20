@@ -1,10 +1,9 @@
 package app.hyuabot.backend.dto.request.shuttle
 
 data class PatchRouteRequest (
-    val routeName: String?,
-    val routeType: String?,
-    val routeDescriptionKorean: String?,
-    val routeDescriptionEnglish: String?,
-    val startStop: String?,
-    val endStop: String?,
+    val routeType: String? = null,
+    val routeDescriptionKorean: String? = null,
+    val routeDescriptionEnglish: String? = null,
+    val startStop: String? = null,
+    val endStop: String? = null,
 )

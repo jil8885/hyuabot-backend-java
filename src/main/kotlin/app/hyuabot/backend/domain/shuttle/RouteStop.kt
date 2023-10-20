@@ -1,8 +1,9 @@
 package app.hyuabot.backend.domain.shuttle
 
 import app.hyuabot.backend.dto.database.ShuttleRouteStopPK
-import app.hyuabot.backend.service.DurationConverter
+import io.hypersistence.utils.hibernate.type.interval.PostgreSQLIntervalType
 import jakarta.persistence.*
+import org.hibernate.annotations.Type
 import java.time.Duration
 
 @Entity
@@ -17,8 +18,7 @@ data class RouteStop (
     val stopName: String,
     @Column(name = "stop_order")
     var seq: Int,
-    @Column(name = "cumulative_time")
-    @Transient
-    @Convert(converter = DurationConverter::class)
+    @Column(name = "cumulative_time", columnDefinition = "interval")
+    @Type(PostgreSQLIntervalType::class)
     var cumulativeTime: Duration,
 )

@@ -33,6 +33,7 @@ dependencies {
     // Connect to PostgreSQL using JDBC and JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql", "postgresql", "42.6.0")
+    implementation("io.hypersistence", "hypersistence-utils-hibernate-62", "3.6.0")
     // Serialization
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.+")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
@@ -54,6 +55,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework:spring-webflux")
     testImplementation("org.springframework.graphql:spring-graphql-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
 }
 
 tasks.withType<KotlinCompile> {

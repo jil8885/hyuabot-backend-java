@@ -4,7 +4,6 @@ import app.hyuabot.backend.domain.shuttle.Route
 import app.hyuabot.backend.domain.shuttle.RouteStop
 import app.hyuabot.backend.domain.shuttle.Timetable
 import app.hyuabot.backend.dto.database.ShuttlePeriodPK
-import app.hyuabot.backend.dto.request.shuttle.PatchPeriodRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteStopRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchTimetableRequest
@@ -228,36 +227,6 @@ class ShuttleAPIController(
         }
     }
 
-    @PatchMapping(
-        "/period/{period}/{start}/{end}",
-        produces = ["application/json"],
-    )
-    fun patchShuttlePeriod(
-        @PathVariable("period") period: String,
-        @PathVariable("start") start: String,
-        @PathVariable("end") end: String,
-        @RequestBody payload: PatchPeriodRequest,
-    ): ResponseEntity<String> {
-        return try {
-            shuttleService.patchShuttlePeriod(ShuttlePeriodPK(
-                periodType = period,
-                periodStart = LocalDateTime.parse(start),
-                periodEnd = LocalDateTime.parse(end),
-            ), payload)
-            ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body(Response.objectMapper.writeValueAsString(Response.SuccessResponse(
-                    "UPDATED"
-                )))
-        } catch (e: Exception) {
-            ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
-                    e.message ?: "NOT FOUND",
-                    "/api/shuttle/period"
-                )))
-        }
-    }
 
     @DeleteMapping(
         "/period/{period}/{start}/{end}",

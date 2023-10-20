@@ -13,15 +13,15 @@ data class User (
     @Column(name = "user_id", unique = true)
     val userID: String,
     @Column(name = "password")
-    val password: String,
+    var password: String,
     @Column(name = "name")
-    val name: String,
+    var name: String,
     @Column(name = "email", unique = true)
-    val email: String,
+    var email: String,
     @Column(name = "phone")
-    val phone: String,
+    var phone: String,
     @Column(name = "active")
-    val active: Boolean,
+    var active: Boolean,
 ) {
     constructor() : this("", "", "", "", "", false)
     companion object {

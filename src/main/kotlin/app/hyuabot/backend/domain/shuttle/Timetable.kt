@@ -6,7 +6,6 @@ import java.time.LocalTime
 @Entity
 @Table(name = "shuttle_timetable")
 data class Timetable (
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seq")
     @Id
     val seq: Int,

@@ -3,22 +3,22 @@ package app.hyuabot.backend.service
 import app.hyuabot.backend.domain.shuttle.*
 import app.hyuabot.backend.dto.database.ShuttlePeriodPK
 import app.hyuabot.backend.dto.database.ShuttleRouteStopPK
-import app.hyuabot.backend.dto.request.shuttle.*
+import app.hyuabot.backend.dto.request.shuttle.PatchRouteRequest
+import app.hyuabot.backend.dto.request.shuttle.PatchRouteStopRequest
+import app.hyuabot.backend.dto.request.shuttle.PatchStopRequest
+import app.hyuabot.backend.dto.request.shuttle.PatchTimetableRequest
 import app.hyuabot.backend.dto.response.ShuttleHolidayItem
 import app.hyuabot.backend.dto.response.ShuttlePeriodItem
 import app.hyuabot.backend.dto.response.ShuttleTimetableItem
 import app.hyuabot.backend.dto.response.ShuttleTimetableViewItem
 import app.hyuabot.backend.repository.shuttle.*
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.NullPointerException
 import java.time.Duration
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Service
@@ -65,13 +65,7 @@ class ShuttleService(
         val item = shuttleHolidayRepository.findById(LocalDate.parse(date)).orElseThrow {
             throw NullPointerException("SPECIFIED_DATE_NOT_FOUND")
         }
-        try {
-            shuttleHolidayRepository.delete(item)
-        } catch (e: DataIntegrityViolationException) {
-            throw Exception("TIMETABLE_ITEM_REFERENCES_HOLIDAY")
-        } catch (e: Exception) {
-            throw Exception("CANNOT_DELETE_HOLIDAY_ITEM")
-        }
+        shuttleHolidayRepository.delete(item)
     }
 
     @Transactional
@@ -95,23 +89,7 @@ class ShuttleService(
         val item = shuttlePeriodRepository.findById(key).orElseThrow {
             throw NullPointerException("SPECIFIED_PERIOD_ITEM_NOT_FOUND")
         }
-        try {
-            shuttlePeriodRepository.delete(item)
-        } catch (e: DataIntegrityViolationException) {
-            throw Exception("TIMETABLE_ITEM_REFERENCES_PERIOD")
-        } catch (e: Exception) {
-            throw Exception("CANNOT_DELETE_PERIOD_ITEM")
-        }
-    }
-
-    @Transactional
-    fun patchShuttlePeriod(key: ShuttlePeriodPK, payload: PatchPeriodRequest) {
-        val item = shuttlePeriodRepository.findById(key).orElseThrow {
-            throw NullPointerException("SPECIFIED_PERIOD_ITEM_NOT_FOUND")
-        }
-        payload.period?.let { item.periodType = it }
-        payload.start?.let { item.periodStart = LocalDateTime.parse(it) }
-        payload.end?.let { item.periodEnd = LocalDateTime.parse(it) }
+        shuttlePeriodRepository.delete(item)
     }
 
     @Transactional
@@ -133,13 +111,7 @@ class ShuttleService(
         val item = shuttleRouteRepository.findById(routeName).orElseThrow {
             throw NullPointerException("SPECIFIED_ROUTE_NOT_FOUND")
         }
-        try {
-            shuttleRouteRepository.delete(item)
-        } catch (e: DataIntegrityViolationException) {
-            throw Exception("ROUTE_STOP_ITEM_REFERENCES_ROUTE")
-        } catch (e: Exception) {
-            throw Exception("CANNOT_DELETE_ROUTE_ITEM")
-        }
+        shuttleRouteRepository.delete(item)
     }
 
     @Transactional
@@ -150,7 +122,7 @@ class ShuttleService(
         val item = shuttleRouteRepository.findById(routeName).orElseThrow {
             throw NullPointerException("SPECIFIED_ROUTE_NOT_FOUND")
         }
-        payload.routeName?.let { item.routeName = it }
+        payload.routeType?.let { item.routeType = it }
         payload.routeDescriptionKorean?.let { item.routeDescriptionKorean = it }
         payload.routeDescriptionEnglish?.let { item.routeDescriptionEnglish = it }
         payload.startStop?.let { item.startStop = it }
@@ -173,17 +145,11 @@ class ShuttleService(
 
     @Transactional
     fun deleteShuttleStop(stopName: String) {
-        try {
-            shuttleStopRepository.findById(stopName).orElseThrow {
+        shuttleStopRepository.findById(stopName).orElseThrow {
                 throw NullPointerException("SPECIFIED_STOP_NOT_FOUND")
             }.let {
                 shuttleStopRepository.delete(it)
             }
-        } catch (e: DataIntegrityViolationException) {
-            throw Exception("ROUTE_STOP_ITEM_REFERENCES_STOP")
-        } catch (e: Exception) {
-            throw Exception("CANNOT_DELETE_STOP_ITEM")
-        }
     }
 
     @Transactional
@@ -215,19 +181,13 @@ class ShuttleService(
 
     @Transactional
     fun deleteShuttleRouteStop(routeName: String, stopName: String) {
-        try {
-                val item = shuttleRouteStopRepository.findById(ShuttleRouteStopPK(
-                routeName = routeName,
-                stopName = stopName,
-            )).orElseThrow {
-                throw NullPointerException("SPECIFIED_ROUTE_STOP_NOT_FOUND")
-            }
-            shuttleRouteStopRepository.delete(item)
-        } catch (e: DataIntegrityViolationException) {
-            throw Exception("TIMETABLE_ITEM_REFERENCES_ROUTE_STOP")
-        } catch (e: Exception) {
-            throw Exception("CANNOT_DELETE_ROUTE_STOP_ITEM")
+        val item = shuttleRouteStopRepository.findById(ShuttleRouteStopPK(
+            routeName = routeName,
+            stopName = stopName,
+        )).orElseThrow {
+            throw NullPointerException("SPECIFIED_ROUTE_STOP_NOT_FOUND")
         }
+        shuttleRouteStopRepository.delete(item)
     }
 
     @Transactional
