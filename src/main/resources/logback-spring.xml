@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <property name="LOG_PATH" value="logs"/>
+    <property name="LOG_FILE_NAME" value="hyuabot_springboot"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] %logger{36} - %msg%n" />
+
+    <springProfile name="logging-type-console">
+        <appender name="PROFILE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+    <springProfile name="logging-type-file">
+        <appender name="PROFILE-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>10MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+
+    <!-- Profile 별로 로그 레벨을 설정 -->
+    <springProfile name="logging-level-local">
+        <property name="LOG_LEVEL_root" value="DEBUG"/>
+        <property name="LOG_LEVEL_app.hyuabot.backend" value="DEBUG"/>
+        <property name="LOG_LEVEL_com.zaxxer.hikari" value="DEBUG"/>
+    </springProfile>
+    <springProfile name="logging-level-dev">
+        <property name="LOG_LEVEL_root" value="INFO"/>
+        <property name="LOG_LEVEL_app.hyuabot.backend" value="INFO"/>
+        <property name="LOG_LEVEL_com.zaxxer.hikari" value="INFO"/>
+    </springProfile>
+    <!-- app.hyuabot.backend 로그 레벨을 설정 -->
+    <logger name="app.hyuabot.backend" level="${LOG_LEVEL_app.hyuabot.backend}" additivity="false">
+        <appender-ref ref="PROFILE-APPENDER"/>
+    </logger>
+    <!-- hikari 로그 레벨을 설정 -->
+    <logger name="com.zaxxer.hikari" level="${LOG_LEVEL_com.zaxxer.hikari}" additivity="false">
+        <appender-ref ref="PROFILE-APPENDER"/>
+    </logger>
+    <!-- root 로그 레벨을 설정 -->
+    <root level="${LOG_LEVEL_root}">
+        <appender-ref ref="PROFILE-APPENDER"/>
+    </root>
+</configuration>

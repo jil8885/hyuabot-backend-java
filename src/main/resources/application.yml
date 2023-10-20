@@ -21,6 +21,11 @@ spring:
   mvc:
     servlet:
       load-on-startup: 1
+  profiles:
+    active: local
+    group:
+      local: logging-type-console, logging-level-local
+      dev: logging-type-file, logging-level-dev
 jwt:
   secret: ${JWT_SECRET}
   refresh-token-validity-in-seconds: 1209600
