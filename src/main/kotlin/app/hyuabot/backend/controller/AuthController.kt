@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.lang.NullPointerException
 
 @RestController
 @RequestMapping("/api/auth")
@@ -69,17 +71,27 @@ class AuthController(
         produces = ["application/json"],
     )
     fun login(@RequestBody request: LoginRequest): ResponseEntity<String> {
-        val response = authService.login(request.username, request.password)
-        val cookie = ResponseCookie.from("refresh-token", response.refreshToken)
-            .httpOnly(true)
-            .maxAge(COOKIE_EXPIRE_TIME)
-            .path("/")
-            .build()
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
-            .build()
+        try {
+            val response = authService.login(request.username, request.password)
+            val cookie = ResponseCookie.from("refresh-token", response.refreshToken)
+                .httpOnly(true)
+                .maxAge(COOKIE_EXPIRE_TIME)
+                .path("/")
+                .build()
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
+                .build()
+        } catch (e: BadCredentialsException) {
+            val response = Response.ErrorResponse(
+                message = "INVALID_USERNAME_OR_PASSWORD",
+                path = "/api/auth/login",
+            )
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Response.objectMapper.writeValueAsString(response))
+        }
     }
 
     @PostMapping("/validate", produces = ["application/json"])
@@ -103,20 +115,31 @@ class AuthController(
 
     @PostMapping("/reissue")
     fun reissue(@CookieValue("refresh-token") refreshToken: String, @RequestHeader("Authorization") accessToken: String): ResponseEntity<Void> {
-        val newToken = authService.reissue(accessToken, refreshToken)
-        if (newToken != null) {
-            val cookie = ResponseCookie.from("refresh-token", newToken.refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .maxAge(COOKIE_EXPIRE_TIME)
-                .path("/")
-                .build()
-            return ResponseEntity
-                .status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${newToken.accessToken}")
-                .build()
-        } else {
+        try {
+            val newToken = authService.reissue(accessToken, refreshToken)
+            if (newToken != null) {
+                val cookie = ResponseCookie.from("refresh-token", newToken.refreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .maxAge(COOKIE_EXPIRE_TIME)
+                    .path("/")
+                    .build()
+                return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer ${newToken.accessToken}")
+                    .build()
+            } else {
+                val cookie = ResponseCookie.from("refresh-token", "")
+                    .maxAge(0)
+                    .path("/")
+                    .build()
+                return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .build()
+            }
+        } catch (e: NullPointerException) {
             val cookie = ResponseCookie.from("refresh-token", "")
                 .maxAge(0)
                 .path("/")
@@ -130,14 +153,25 @@ class AuthController(
 
     @PostMapping("/logout")
     fun logout(@RequestHeader("Authorization") accessToken: String): ResponseEntity<Void> {
-        authService.logout(accessToken)
-        val cookie = ResponseCookie.from("refresh-token", "")
-            .maxAge(0)
-            .path("/")
-            .build()
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .build()
+        try {
+            authService.logout(accessToken)
+            val cookie = ResponseCookie.from("refresh-token", "")
+                .maxAge(0)
+                .path("/")
+                .build()
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build()
+        } catch (e: NullPointerException) {
+            val cookie = ResponseCookie.from("refresh-token", "")
+                .maxAge(0)
+                .path("/")
+                .build()
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build()
+        }
     }
 }

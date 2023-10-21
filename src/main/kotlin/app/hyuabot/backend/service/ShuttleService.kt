@@ -7,10 +7,7 @@ import app.hyuabot.backend.dto.request.shuttle.PatchRouteRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteStopRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchStopRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchTimetableRequest
-import app.hyuabot.backend.dto.response.ShuttleHolidayItem
-import app.hyuabot.backend.dto.response.ShuttlePeriodItem
-import app.hyuabot.backend.dto.response.ShuttleTimetableItem
-import app.hyuabot.backend.dto.response.ShuttleTimetableViewItem
+import app.hyuabot.backend.dto.response.*
 import app.hyuabot.backend.repository.shuttle.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -46,6 +43,7 @@ class ShuttleService(
     @Transactional
     fun postShuttleHoliday(item: ShuttleHolidayItem) {
         if (shuttleHolidayRepository.existsById(LocalDate.parse(item.date))) {
+            println(item.date)
             throw Exception(
                 "DUPLICATED"
             )
@@ -81,7 +79,16 @@ class ShuttleService(
 
     @Transactional
     fun postShuttlePeriod(item: Period) {
-        shuttlePeriodRepository.save(item)
+        if (shuttlePeriodRepository.existsById(
+            ShuttlePeriodPK(
+                periodType = item.periodType,
+                periodStart = item.periodStart,
+                periodEnd = item.periodEnd
+        ))) {
+            throw Exception("DUPLICATED")
+        } else {
+            shuttlePeriodRepository.save(item)
+        }
     }
 
     @Transactional
@@ -163,7 +170,14 @@ class ShuttleService(
     }
 
     @Transactional
-    fun getShuttleRouteStop(route: String): List<RouteStop> = shuttleRouteStopRepository.findAllByRouteName(route)
+    fun getShuttleRouteStop(route: String): List<ShuttleRouteStopItem> = shuttleRouteStopRepository.findAllByRouteName(route).map {
+        ShuttleRouteStopItem(
+            it.routeName,
+            it.stopName,
+            it.seq,
+            it.cumulativeTime.toString(),
+        )
+    }
 
     @Transactional
     fun postShuttleRouteStop(item: RouteStop) {

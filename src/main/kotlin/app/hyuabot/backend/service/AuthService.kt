@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.security.SignatureException
 
 
 @Service
@@ -32,8 +33,14 @@ class AuthService (
     }
 
     fun validate(accessToken: String): Boolean {
-        val token = resolveToken(accessToken)
-        return jwtTokenProvider.validateAccessTokenOnlyExpired(token!!)
+        return try {
+            val token = resolveToken(accessToken)
+            jwtTokenProvider.validateAccessTokenOnlyExpired(token!!)
+        } catch (e: SignatureException) {
+            true
+        } catch (e: NullPointerException) {
+            true
+        }
     }
 
     @Transactional

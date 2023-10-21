@@ -2,10 +2,12 @@ package app.hyuabot.backend.controller
 
 import app.hyuabot.backend.domain.shuttle.Route
 import app.hyuabot.backend.domain.shuttle.RouteStop
+import app.hyuabot.backend.domain.shuttle.Stop
 import app.hyuabot.backend.domain.shuttle.Timetable
 import app.hyuabot.backend.dto.database.ShuttlePeriodPK
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteStopRequest
+import app.hyuabot.backend.dto.request.shuttle.PatchStopRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchTimetableRequest
 import app.hyuabot.backend.dto.response.Response
 import app.hyuabot.backend.dto.response.ShuttleHolidayItem
@@ -422,6 +424,83 @@ class ShuttleAPIController(
                 .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
                     e.message ?: "NOT FOUND",
                     "/api/shuttle/route/$route/stop/$stop"
+                )))
+        }
+    }
+
+    @GetMapping("/stop", produces = ["application/json"])
+    fun getShuttleStop(): ResponseEntity<String> {
+        val query = shuttleService.getShuttleStop()
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(Response.objectMapper.writeValueAsString(Response.ContentResponse(query)))
+    }
+
+    @PostMapping("/stop", produces = ["application/json"])
+    fun postShuttleStop(@RequestBody payload: Stop): ResponseEntity<String> {
+        return try {
+            shuttleService.postShuttleStop(payload)
+            ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Response.objectMapper.writeValueAsString(Response.SuccessResponse(
+                    "CREATED"
+                )))
+        } catch (e: Exception) {
+            ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
+                    e.message ?: "CONFLICT",
+                    "/api/shuttle/stop"
+                )))
+        }
+    }
+
+    @PatchMapping("/stop/{name}", produces = ["application/json"])
+    fun patchShuttleStop(
+        @PathVariable("name") name: String,
+        @RequestBody payload: PatchStopRequest,
+    ): ResponseEntity<String> {
+        return try {
+            shuttleService.patchShuttleStop(name, payload)
+            ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(Response.objectMapper.writeValueAsString(Response.SuccessResponse(
+                    "UPDATED"
+                )))
+        } catch (e: Exception) {
+            ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
+                    e.message ?: "NOT FOUND",
+                    "/api/shuttle/stop/$name"
+                )))
+        }
+    }
+
+    @DeleteMapping("/stop/{name}", produces = ["application/json"])
+    fun deleteShuttleStop(
+        @PathVariable("name") name: String,
+    ): ResponseEntity<String> {
+        return try {
+            shuttleService.deleteShuttleStop(name)
+            ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(Response.objectMapper.writeValueAsString(Response.SuccessResponse(
+                    "DELETED"
+                )))
+        } catch (e: DataIntegrityViolationException) {
+            ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
+                    e.message ?: "BAD REQUEST",
+                    "/api/shuttle/stop/$name"
+                )))
+        } catch (e: Exception) {
+            ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(Response.objectMapper.writeValueAsString(Response.ErrorResponse(
+                    e.message ?: "NOT FOUND",
+                    "/api/shuttle/stop/$name"
                 )))
         }
     }
