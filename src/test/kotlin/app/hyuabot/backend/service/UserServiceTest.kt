@@ -5,6 +5,7 @@ import app.hyuabot.backend.repository.UserRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,6 +47,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("SIGN_UP_SUCCESS")
     fun testSignUp() {
         // Create test user
         userService.signUp(
@@ -59,6 +61,11 @@ class UserServiceTest {
         )
         assertTrue(userRepository.findByUserID("test2") != null)
         userRepository.deleteById("test2")
+    }
+
+    @Test
+    @DisplayName("SIGN_UP_DUPLICATED_USER_ID")
+    fun testSignUpDuplicatedUserID() {
         // Create duplicated user
         assertTrue(
             assertThrows<Exception> {
@@ -76,6 +83,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("CHECK_DUPLICATE_USER_ID")
     fun testCheckDuplicate() {
         assertTrue(userService.checkDuplicate("test"))
         assertTrue(!userService.checkDuplicate("test2"))

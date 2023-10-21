@@ -569,7 +569,7 @@ class ShuttleControllerTest {
     @DisplayName("DELETE_SHUTTLE_STOP_UNAUTHORIZED")
     fun testDeleteShuttleStopUnauthorized() {
         mockmvc.perform(
-            MockMvcRequestBuilders.delete("/api/shuttle/stop/test")
+            MockMvcRequestBuilders.delete("/api/shuttle/stop/testStop")
         )
         .andDo(print())
         .andExpect(MockMvcResultMatchers.status().isUnauthorized)
@@ -592,23 +592,23 @@ class ShuttleControllerTest {
     @DisplayName("DELETE_SHUTTLE_STOP_SUCCESS")
     fun testDeleteShuttleStopSuccess() {
         mockmvc.perform(
-            MockMvcRequestBuilders.delete("/api/shuttle/stop/test")
+            MockMvcRequestBuilders.delete("/api/shuttle/stop/testStop")
                 .header("Authorization", getAccessToken())
         )
         .andDo(print())
         .andExpect(MockMvcResultMatchers.status().isNoContent)
 
-        assertTrue(shuttleStopRepository.findById("test").isEmpty)
+        assertTrue(shuttleStopRepository.findById("testStop").isEmpty)
     }
 
     @Test
     @DisplayName("PATCH_SHUTTLE_STOP_UNAUTHORIZED")
     fun testPatchShuttleStopUnauthorized() {
         mockmvc.perform(
-            MockMvcRequestBuilders.patch("/api/shuttle/stop/test")
+            MockMvcRequestBuilders.patch("/api/shuttle/stop/testStop")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("test", 0.0, 0.0)
+                    PatchStopRequest(0.0, 0.0)
                 ))
         )
         .andDo(print())
@@ -623,7 +623,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("test", 0.0, 0.0)
+                    PatchStopRequest(0.0, 0.0)
                 ))
         )
         .andDo(print())
@@ -640,7 +640,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("testStop", 0.5, 0.5)
+                    PatchStopRequest(0.5, 0.5)
                 ))
         )
         .andDo(print())

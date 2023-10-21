@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,19 +58,23 @@ class AuthServiceTest {
     }
 
     @Test
-    fun testLogin() {
-        // Successful case
+    @DisplayName("LOGIN_SUCCESS")
+    fun testLoginSuccess() {
         val token = authService.login("test", "test")
         assertTrue(token.accessToken != "")
         assertTrue(token.refreshToken != "")
+    }
 
-        // Fail case
+    @Test
+    @DisplayName("LOGIN_FAIL")
+    fun testLoginFail() {
         assertThrows<BadCredentialsException> {
             authService.login("test", "test2")
         }
     }
 
     @Test
+    @DisplayName("VALIDATE_TOKEN_SUCCESS")
     fun testValidateToken() {
         // Successful case
         val token = authService.login("test", "test").accessToken
@@ -77,6 +82,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("VALIDATE_TOKEN_FAIL")
     fun testReissueToken() {
         // Successful case
         val token = authService.login("test", "test")
@@ -95,6 +101,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("GENERATE_TOKEN_SUCCESS")
     fun testGenerateToken() {
         // Successful case
         val token = authService.generateToken(
@@ -108,6 +115,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("GENERATE_REFRESH_TOKEN_SUCCESS")
     fun testSaveRefreshToken() {
         // Successful case
         val token = authService.login("test", "test")
@@ -120,6 +128,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("GET_AUTHORITIES_SUCCESS")
     fun testGetAuthorities() {
         // Successful case
         val token = authService.login("test", "test")
@@ -130,6 +139,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("GET_PRINCIPAL_SUCCESS")
     fun testGetPrincipal() {
         // Successful case
         val token = authService.login("test", "test")
@@ -138,6 +148,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("RESOLVE_TOKEN_SUCCESS")
     fun testResolveToken() {
         // Successful case
         val token = authService.login("test", "test")
@@ -146,6 +157,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("LOGOUT_SUCCESS")
     fun testLogout() {
         // Successful case
         val token = authService.login("test", "test")

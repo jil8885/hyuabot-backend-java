@@ -12,6 +12,7 @@ import app.hyuabot.backend.repository.shuttle.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -66,32 +67,48 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_HOLIDAY_SUCCESS")
     fun testGetShuttleHoliday() {
         assertTrue(shuttleService.getShuttleHoliday().isNotEmpty())
     }
 
     @Test
-    fun testPostShuttleHoliday() {
-        val previousSize = shuttleHolidayRepository.findAll().size
-        // Test duplicated
+    @DisplayName("POST_SHUTTLE_HOLIDAY_FAIL_DUPLICATED")
+    fun testPostShuttleHolidayDuplicated() {
         assertTrue(
             assertThrows<Exception> {
-                shuttleService.postShuttleHoliday(ShuttleHolidayItem(testDate.toString(), "weekends", "test"))
+                shuttleService.postShuttleHoliday(
+                    ShuttleHolidayItem(
+                        testDate.toString(),
+                        "weekends",
+                        "test"
+                    )
+                )
             }.message == "DUPLICATED"
         )
-        // Test success
+    }
+
+    @Test
+    @DisplayName("POST_SHUTTLE_HOLIDAY_SUCCESS")
+    fun testPostShuttleHolidaySuccess() {
+        val previousSize = shuttleHolidayRepository.findAll().size
         shuttleService.postShuttleHoliday(ShuttleHolidayItem((testDate.plusDays(10)).toString(), "weekends", "test"))
         assertTrue(shuttleHolidayRepository.findAll().size == previousSize + 1)
         shuttleHolidayRepository.deleteById(testDate.plusDays(10))
     }
 
     @Test
+    @DisplayName("DELETE_SHUTTLE_HOLIDAY_SUCCESS")
     fun testDeleteShuttleHoliday() {
-        // Test success
         val previousSize = shuttleHolidayRepository.findAll().size
         shuttleService.deleteShuttleHoliday(testDate.toString())
         assertTrue(shuttleHolidayRepository.findAll().size == previousSize - 1)
-        // Test not found
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_HOLIDAY_FAIL_NOT_FOUND")
+    fun testDeleteShuttleHolidayFail() {
+        shuttleHolidayRepository.deleteById(testDate)
         assertTrue(
             assertThrows<NullPointerException> {
                 shuttleService.deleteShuttleHoliday(testDate.toString())
@@ -100,11 +117,13 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_PERIOD_SUCCESS")
     fun testGetShuttlePeriod() {
         assertTrue(shuttleService.getShuttlePeriod().isNotEmpty())
     }
 
     @Test
+    @DisplayName("POST_SHUTTLE_PERIOD")
     fun testPostShuttlePeriod() {
         val previousSize = shuttlePeriodRepository.findAll().size
         // Test success
@@ -118,14 +137,29 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("DELETE_SHUTTLE_PERIOD_SUCCESS")
     fun testDeleteShuttlePeriod() {
-        // Test success
         val previousSize = shuttlePeriodRepository.findAll().size
-        shuttleTimetableRepository.deleteAll(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
-        shuttleService.deleteShuttlePeriod(ShuttlePeriodPK("test", testStartDateTime, testEndDateTime))
+        shuttleTimetableRepository.deleteAll(
+            shuttleTimetableRepository.findAllByRouteNameAndPeriodType(
+                "test",
+                "test"
+            )
+        )
+        shuttleService.deleteShuttlePeriod(
+            ShuttlePeriodPK(
+                "test",
+                testStartDateTime,
+                testEndDateTime
+            )
+        )
         assertTrue(shuttlePeriodRepository.findAll().size == previousSize - 1)
+    }
 
-        // Test not found
+    @Test
+    @DisplayName("DELETE_SHUTTLE_PERIOD_FAIL_NOT_FOUND")
+    fun testDeleteShuttlePeriodFail() {
+        shuttlePeriodRepository.deleteById(ShuttlePeriodPK("test", testStartDateTime, testEndDateTime))
         assertTrue(
             assertThrows<NullPointerException> {
                 shuttleService.deleteShuttlePeriod(ShuttlePeriodPK("test", testStartDateTime, testEndDateTime))
@@ -134,39 +168,95 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_ROUTE_SUCCESS")
     fun testGetShuttleRoute() {
         assertTrue(shuttleService.getShuttleRoute().isNotEmpty())
     }
 
     @Test
+    @DisplayName("POST_SHUTTLE_ROUTE_FAIL_DUPLICATED")
     fun testPostShuttleRoute() {
-        val previousSize = shuttleRouteRepository.findAll().size
-        // Test duplicated
         assertTrue(
             assertThrows<Exception> {
-                shuttleService.postShuttleRoute(Route("test", "test", "test", "test", "startStop", "endStop"))
+                shuttleService.postShuttleRoute(
+                    Route(
+                        "test",
+                        "test",
+                        "test",
+                        "test",
+                        "startStop",
+                        "endStop"
+                    )
+                )
             }.message == "DUPLICATED"
         )
-        // Test success
+    }
+
+    @Test
+    fun testPostShuttleRouteSuccess() {
+        val previousSize = shuttleRouteRepository.findAll().size
         shuttleService.postShuttleRoute(Route("test1", "test", "test", "test", "startStop", "endStop"))
         assertTrue(shuttleRouteRepository.findAll().size == previousSize + 1)
         shuttleRouteRepository.deleteById("test1")
     }
 
     @Test
-    fun testDeleteShuttleRoute() {
+    @DisplayName("DELETE_SHUTTLE_ROUTE_FAIL_INTEGRITY_VIOLATION")
+    fun testDeleteShuttleRouteFail() {
         // Should delete all related data
-        val previousSize = shuttleRouteRepository.findAll().size
         assertThrows<DataIntegrityViolationException> {
             shuttleService.deleteShuttleRoute("test")
         }
-        // Test success
-        shuttleTimetableRepository.deleteAll(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
-        shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "startStop"))
-        shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "endStop"))
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_ROUTE_SUCCESS")
+    fun testDeleteShuttleRouteSuccess() {
+        val previousSize = shuttleRouteRepository.findAll().size
+        shuttleTimetableRepository.deleteAll(
+            shuttleTimetableRepository.findAllByRouteNameAndPeriodType(
+                "test",
+                "test"
+            )
+        )
+        shuttleRouteStopRepository.deleteById(
+            ShuttleRouteStopPK(
+                "test",
+                "startStop"
+            )
+        )
+        shuttleRouteStopRepository.deleteById(
+            ShuttleRouteStopPK(
+                "test",
+                "endStop"
+            )
+        )
         shuttleService.deleteShuttleRoute("test")
         assertTrue(shuttleRouteRepository.findAll().size == previousSize - 1)
-        // Test not found
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_ROUTE_FAIL_NOT_FOUND")
+    fun testDeleteShuttleRouteFailNotFound() {
+        shuttleTimetableRepository.deleteAll(
+            shuttleTimetableRepository.findAllByRouteNameAndPeriodType(
+                "test",
+                "test"
+            )
+        )
+        shuttleRouteStopRepository.deleteById(
+            ShuttleRouteStopPK(
+                "test",
+                "startStop"
+            )
+        )
+        shuttleRouteStopRepository.deleteById(
+            ShuttleRouteStopPK(
+                "test",
+                "endStop"
+            )
+        )
+        shuttleRouteRepository.deleteById("test")
         assertTrue(
             assertThrows<NullPointerException> {
                 shuttleService.deleteShuttleRoute("test")
@@ -175,28 +265,54 @@ class ShuttleServiceTest {
     }
 
     @Test
-    fun testPatchShuttleRoute() {
-        // 1. Change route description in Korean
+    @DisplayName("PATCH_SHUTTLE_ROUTE_DESCRIPTION_KOREAN_SUCCESS")
+    fun testPatchShuttleRouteDescriptionKorean() {
         shuttleService.patchShuttleRoute("test", PatchRouteRequest(
             routeDescriptionKorean = "test1"
         ))
         assertTrue(shuttleRouteRepository.findById("test").get().routeDescriptionKorean == "test1")
-        // 2. Change route description in English
-        shuttleService.patchShuttleRoute("test", PatchRouteRequest(
-            routeDescriptionEnglish = "test2"
-        ))
-        assertTrue(shuttleRouteRepository.findById("test").get().routeDescriptionEnglish == "test2")
-        // 3. Change route type
-        shuttleService.patchShuttleRoute("test", PatchRouteRequest(
-            routeType = "test3"
-        ))
+    }
+
+    @Test
+    @DisplayName("PATCH_SHUTTLE_ROUTE_DESCRIPTION_ENGLISH_SUCCESS")
+    fun testPatchShuttleRouteDescriptionEnglish() {
+        shuttleService.patchShuttleRoute(
+            "test",
+            PatchRouteRequest(
+                routeDescriptionEnglish = "test2"
+            )
+        )
+        assertTrue(shuttleRouteRepository.findById("test")
+                .get().routeDescriptionEnglish == "test2"
+        )
+    }
+
+    @Test
+    @DisplayName("PATCH_SHUTTLE_ROUTE_TYPE_SUCCESS")
+    fun testPatchShuttleRouteType() {
+        shuttleService.patchShuttleRoute(
+            "test", PatchRouteRequest(
+                routeType = "test3"
+            )
+        )
         assertTrue(shuttleRouteRepository.findById("test").get().routeType == "test3")
-        // 4. Change start stop
-        shuttleService.patchShuttleRoute("test", PatchRouteRequest(
-            startStop = "endStop"
-        ))
-        assertTrue(shuttleRouteRepository.findById("test").get().startStop == "endStop")
-        // 5. Change end stop
+    }
+
+    @Test
+    @DisplayName("PATCH_SHUTTLE_ROUTE_START_STOP_SUCCESS")
+    fun testPatchShuttleRouteStartStop() {
+        shuttleService.patchShuttleRoute(
+            "test", PatchRouteRequest(
+                startStop = "endStop"
+            )
+        )
+        assertTrue(shuttleRouteRepository.findById("test").get().startStop == "endStop"
+        )
+    }
+
+    @Test
+    @DisplayName("PATCH_SHUTTLE_ROUTE_END_STOP_SUCCESS")
+    fun testPatchShuttleRouteEndStop() {
         shuttleService.patchShuttleRoute("test", PatchRouteRequest(
             endStop = "startStop"
         ))
@@ -209,29 +325,36 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("POST_SHUTTLE_STOP_FAIL_DUPLICATED")
     fun testPostShuttleStop() {
-        val previousSize = shuttleStopRepository.findAll().size
-        // Test duplicated
         assertTrue(
             assertThrows<Exception> {
                 shuttleService.postShuttleStop(Stop("startStop", 0.0, 0.0))
             }.message == "DUPLICATED"
         )
-        println(shuttleStopRepository.findById("test"))
-        // Test success
+    }
+
+    @Test
+    @DisplayName("POST_SHUTTLE_STOP_SUCCESS")
+    fun testPostShuttleStopSuccess() {
+        val previousSize = shuttleStopRepository.findAll().size
         shuttleService.postShuttleStop(Stop("test", 0.0, 0.0))
         assertTrue(shuttleStopRepository.findAll().size == previousSize + 1)
         shuttleStopRepository.deleteById("test")
     }
 
     @Test
+    @DisplayName("DELETE_SHUTTLE_STOP_FAIL_INTEGRITY_VIOLATION")
     fun testDeleteShuttleStop() {
-        // Should delete all related data
-        val previousSize = shuttleStopRepository.findAll().size
         assertThrows<DataIntegrityViolationException> {
             shuttleService.deleteShuttleStop("startStop")
         }
-        // Test success
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_STOP_SUCCESS")
+    fun testDeleteShuttleStopSuccess() {
+        val previousSize = shuttleStopRepository.findAll().size
         shuttleTimetableRepository.deleteAll(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
         shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "startStop"))
         shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "endStop"))
@@ -247,6 +370,7 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("PATCH_SHUTTLE_STOP_SUCCESS")
     fun testPatchShuttleStop() {
         // 1. Change latitude
         shuttleService.patchShuttleStop("startStop", PatchStopRequest(
@@ -261,32 +385,51 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_ROUTE_STOP_SUCCESS")
     fun testGetShuttleRouteStop() {
         assertTrue(shuttleService.getShuttleRouteStop("test").isNotEmpty())
     }
 
     @Test
+    @DisplayName("POST_SHUTTLE_ROUTE_STOP_FAIL_DUPLICATED")
     fun testPostShuttleRouteStop() {
-        val previousSize = shuttleRouteStopRepository.findAll().size
-        // Test duplicated
         assertTrue(
             assertThrows<Exception> {
-                shuttleService.postShuttleRouteStop(RouteStop("test", "startStop", 0, Duration.ofMinutes(0)))
+                shuttleService.postShuttleRouteStop(
+                    RouteStop(
+                        "test",
+                        "startStop",
+                        0,
+                        Duration.ofMinutes(0)
+                    )
+                )
             }.message == "DUPLICATED"
         )
-        // Test success
+    }
+
+    @Test
+    @DisplayName("POST_SHUTTLE_ROUTE_STOP_SUCCESS")
+    fun testPostShuttleRouteStopSuccess() {
+        val previousSize = shuttleRouteStopRepository.findAll().size
         shuttleStopRepository.save(Stop("test", 0.0, 0.0))
         shuttleService.postShuttleRouteStop(RouteStop("test", "test", 2, Duration.ofMinutes(20)))
         assertTrue(shuttleRouteStopRepository.findAll().size == previousSize + 1)
         shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "test"))
+        shuttleStopRepository.deleteById("test")
     }
 
     @Test
+    @DisplayName("DELETE_SHUTTLE_ROUTE_STOP_SUCCESS")
     fun testDeleteShuttleRouteStop() {
         val previousSize = shuttleRouteStopRepository.findAll().size
         shuttleService.deleteShuttleRouteStop("test", "startStop")
         assertTrue(shuttleRouteStopRepository.findAll().size == previousSize - 1)
-        // Test not found
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_ROUTE_STOP_FAIL_NOT_FOUND")
+    fun testDeleteShuttleRouteStopFail() {
+        shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "startStop"))
         assertTrue(
             assertThrows<NullPointerException> {
                 shuttleService.deleteShuttleRouteStop("test", "startStop")
@@ -295,6 +438,7 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("PATCH_SHUTTLE_ROUTE_STOP_SUCCESS")
     fun testPatchShuttleRouteStop() {
         // 1. Change seq
         shuttleService.patchShuttleRouteStop("test", "startStop", PatchRouteStopRequest(
@@ -309,33 +453,50 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_TIMETABLE_SUCCESS")
     fun testGetShuttleTimetable() {
         assertTrue(shuttleService.getShuttleTimetable().isNotEmpty())
     }
 
     @Test
+    @DisplayName("POST_SHUTTLE_TIMETABLE_FAIL_DUPLICATED")
     fun testPostShuttleTimetable() {
-        val previousSize = shuttleTimetableRepository.findAll().size
-        println(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
-        // Test duplicated
         assertTrue(
             assertThrows<Exception> {
-                shuttleService.postShuttleTimetable(Timetable(9999, "test", true, "test", LocalTime.now()))
+                shuttleService.postShuttleTimetable(
+                    Timetable(
+                        9999,
+                        "test",
+                        true,
+                        "test",
+                        LocalTime.now()
+                    )
+                )
             }.message == "DUPLICATED"
         )
-        // Test success
+    }
+
+    @Test
+    @DisplayName("POST_SHUTTLE_TIMETABLE_SUCCESS")
+    fun testPostShuttleTimetableSuccess() {
+        val previousSize = shuttleTimetableRepository.findAll().size
         shuttleService.postShuttleTimetable(Timetable(10000, "test", true, "test", LocalTime.now().plusHours(1)))
         assertTrue(shuttleTimetableRepository.findAll().size == previousSize + 1)
         shuttleTimetableRepository.deleteAll(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
     }
 
     @Test
+    @DisplayName("DELETE_SHUTTLE_TIMETABLE_SUCCESS")
     fun testDeleteShuttleTimetable() {
-        // Test success
         val previousSize = shuttleTimetableRepository.findAll().size
         shuttleService.deleteShuttleTimetable(9999)
         assertTrue(shuttleTimetableRepository.findAll().size == previousSize - 1)
-        // Test not found
+    }
+
+    @Test
+    @DisplayName("DELETE_SHUTTLE_TIMETABLE_FAIL_NOT_FOUND")
+    fun testDeleteShuttleTimetableFail() {
+        shuttleTimetableRepository.deleteById(9999)
         assertTrue(
             assertThrows<NullPointerException> {
                 shuttleService.deleteShuttleTimetable(9999)
@@ -344,6 +505,7 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("PATCH_SHUTTLE_TIMETABLE_SUCCESS")
     fun testPatchShuttleTimetable() {
         // 1. Change period type
         shuttleService.patchShuttleTimetable(9999, PatchTimetableRequest(
@@ -368,6 +530,7 @@ class ShuttleServiceTest {
     }
 
     @Test
+    @DisplayName("GET_SHUTTLE_TIMETABLE_VIEW_SUCCESS")
     fun testGetShuttleTimetableView() {
         assertTrue(shuttleService.getShuttleTimetableView(
             "test",
