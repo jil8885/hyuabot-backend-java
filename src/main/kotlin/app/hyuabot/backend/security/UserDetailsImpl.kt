@@ -1,6 +1,6 @@
 package app.hyuabot.backend.security
 
-import app.hyuabot.backend.domain.User
+import app.hyuabot.backend.domain.admin.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 

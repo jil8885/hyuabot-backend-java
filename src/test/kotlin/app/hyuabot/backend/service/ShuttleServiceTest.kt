@@ -42,15 +42,15 @@ class ShuttleServiceTest {
     private val testEndDateTime = testDate.atTime(23, 59)
     @BeforeEach
     fun init() {
-        shuttleHolidayRepository.save(Holiday(testDate, "weekends", "test"))
-        shuttlePeriodTypeRepository.save(PeriodType("test"))
-        shuttlePeriodRepository.save(Period("test", testStartDateTime, testEndDateTime))
-        shuttleStopRepository.save(Stop("startStop", 0.0, 0.0))
-        shuttleStopRepository.save(Stop("endStop", 0.0, 0.0))
-        shuttleRouteRepository.save(Route("test", "test", "test", "test", "startStop", "endStop"))
-        shuttleRouteStopRepository.save(RouteStop("test", "startStop", 0, Duration.ofMinutes(0)))
-        shuttleRouteStopRepository.save(RouteStop("test", "endStop", 1, Duration.ofMinutes(10)))
-        shuttleTimetableRepository.save(Timetable(9999, "test", true, "test", LocalTime.now()))
+        shuttleHolidayRepository.save(ShuttleHoliday(testDate, "weekends", "test"))
+        shuttlePeriodTypeRepository.save(ShuttlePeriodType("test"))
+        shuttlePeriodRepository.save(ShuttlePeriod("test", testStartDateTime, testEndDateTime))
+        shuttleStopRepository.save(ShuttleStop("startStop", 0.0, 0.0))
+        shuttleStopRepository.save(ShuttleStop("endStop", 0.0, 0.0))
+        shuttleRouteRepository.save(ShuttleRoute("test", "test", "test", "test", "startStop", "endStop"))
+        shuttleRouteStopRepository.save(ShuttleRouteStop("test", "startStop", 0, Duration.ofMinutes(0)))
+        shuttleRouteStopRepository.save(ShuttleRouteStop("test", "endStop", 1, Duration.ofMinutes(10)))
+        shuttleTimetableRepository.save(ShuttleTimetable(9999, "test", true, "test", LocalTime.now()))
     }
 
     @AfterEach
@@ -127,7 +127,7 @@ class ShuttleServiceTest {
     fun testPostShuttlePeriod() {
         val previousSize = shuttlePeriodRepository.findAll().size
         // Test success
-        shuttleService.postShuttlePeriod(Period(
+        shuttleService.postShuttlePeriod(ShuttlePeriod(
             "test",
             testStartDateTime.plusDays(10),
             testEndDateTime.plusDays(10),
@@ -179,7 +179,7 @@ class ShuttleServiceTest {
         assertTrue(
             assertThrows<Exception> {
                 shuttleService.postShuttleRoute(
-                    Route(
+                    ShuttleRoute(
                         "test",
                         "test",
                         "test",
@@ -195,7 +195,7 @@ class ShuttleServiceTest {
     @Test
     fun testPostShuttleRouteSuccess() {
         val previousSize = shuttleRouteRepository.findAll().size
-        shuttleService.postShuttleRoute(Route("test1", "test", "test", "test", "startStop", "endStop"))
+        shuttleService.postShuttleRoute(ShuttleRoute("test1", "test", "test", "test", "startStop", "endStop"))
         assertTrue(shuttleRouteRepository.findAll().size == previousSize + 1)
         shuttleRouteRepository.deleteById("test1")
     }
@@ -329,7 +329,7 @@ class ShuttleServiceTest {
     fun testPostShuttleStop() {
         assertTrue(
             assertThrows<Exception> {
-                shuttleService.postShuttleStop(Stop("startStop", 0.0, 0.0))
+                shuttleService.postShuttleStop(ShuttleStop("startStop", 0.0, 0.0))
             }.message == "DUPLICATED"
         )
     }
@@ -338,7 +338,7 @@ class ShuttleServiceTest {
     @DisplayName("POST_SHUTTLE_STOP_SUCCESS")
     fun testPostShuttleStopSuccess() {
         val previousSize = shuttleStopRepository.findAll().size
-        shuttleService.postShuttleStop(Stop("test", 0.0, 0.0))
+        shuttleService.postShuttleStop(ShuttleStop("test", 0.0, 0.0))
         assertTrue(shuttleStopRepository.findAll().size == previousSize + 1)
         shuttleStopRepository.deleteById("test")
     }
@@ -396,7 +396,7 @@ class ShuttleServiceTest {
         assertTrue(
             assertThrows<Exception> {
                 shuttleService.postShuttleRouteStop(
-                    RouteStop(
+                    ShuttleRouteStop(
                         "test",
                         "startStop",
                         0,
@@ -411,8 +411,8 @@ class ShuttleServiceTest {
     @DisplayName("POST_SHUTTLE_ROUTE_STOP_SUCCESS")
     fun testPostShuttleRouteStopSuccess() {
         val previousSize = shuttleRouteStopRepository.findAll().size
-        shuttleStopRepository.save(Stop("test", 0.0, 0.0))
-        shuttleService.postShuttleRouteStop(RouteStop("test", "test", 2, Duration.ofMinutes(20)))
+        shuttleStopRepository.save(ShuttleStop("test", 0.0, 0.0))
+        shuttleService.postShuttleRouteStop(ShuttleRouteStop("test", "test", 2, Duration.ofMinutes(20)))
         assertTrue(shuttleRouteStopRepository.findAll().size == previousSize + 1)
         shuttleRouteStopRepository.deleteById(ShuttleRouteStopPK("test", "test"))
         shuttleStopRepository.deleteById("test")
@@ -464,7 +464,7 @@ class ShuttleServiceTest {
         assertTrue(
             assertThrows<Exception> {
                 shuttleService.postShuttleTimetable(
-                    Timetable(
+                    ShuttleTimetable(
                         9999,
                         "test",
                         true,
@@ -480,7 +480,7 @@ class ShuttleServiceTest {
     @DisplayName("POST_SHUTTLE_TIMETABLE_SUCCESS")
     fun testPostShuttleTimetableSuccess() {
         val previousSize = shuttleTimetableRepository.findAll().size
-        shuttleService.postShuttleTimetable(Timetable(10000, "test", true, "test", LocalTime.now().plusHours(1)))
+        shuttleService.postShuttleTimetable(ShuttleTimetable(10000, "test", true, "test", LocalTime.now().plusHours(1)))
         assertTrue(shuttleTimetableRepository.findAll().size == previousSize + 1)
         shuttleTimetableRepository.deleteAll(shuttleTimetableRepository.findAllByRouteNameAndPeriodType("test", "test"))
     }

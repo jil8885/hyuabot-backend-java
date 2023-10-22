@@ -1,0 +1,35 @@
+package app.hyuabot.backend.domain.library
+
+import app.hyuabot.backend.domain.Campus
+import jakarta.persistence.*
+import java.time.LocalDateTime
+
+@Entity
+@Table(name = "reading_room")
+data class ReadingRoom (
+    @Id
+    @Column(name = "room_id")
+    val id: Int,
+    @Column(name = "room_name")
+    var name: String,
+    @Column(name = "campus_id")
+    val campusID: Int,
+    @Column(name = "is_active")
+    var isActive: Boolean,
+    @Column(name = "is_reservable")
+    var isReservable: Boolean,
+    @Column(name = "total")
+    var total: Int,
+    @Column(name = "active_total")
+    var active: Int,
+    @Column(name = "occupied")
+    var occupied: Int,
+    @Column(name = "available")
+    var available: Int,
+    @Column(name = "last_updated_time")
+    var updatedAt: LocalDateTime,
+
+    @ManyToOne
+    @JoinColumn(name = "campus_id", referencedColumnName = "campus_id", insertable = false, updatable = false)
+    val campus: Campus,
+)

@@ -3,13 +3,12 @@ package app.hyuabot.backend.domain.shuttle
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.IdClass
 import jakarta.persistence.Table
 import java.time.LocalDate
 
 @Entity
 @Table(name = "shuttle_holiday")
-data class Holiday (
+data class ShuttleHoliday (
     @Id
     @Column(name = "holiday_date")
     val holidayDate: LocalDate,

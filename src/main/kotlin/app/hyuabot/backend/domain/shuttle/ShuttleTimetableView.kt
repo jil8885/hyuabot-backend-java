@@ -9,7 +9,7 @@ import java.time.LocalTime
 @Table(name = "shuttle_timetable_view")
 @Immutable
 @IdClass(ShuttleTimetableViewPK::class)
-data class TimetableView (
+data class ShuttleTimetableView (
     @Column(name = "seq")
     @Id
     val seq: Int,

@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "shuttle_route")
-data class Route (
+data class ShuttleRoute (
     @Column(name = "route_name")
     @Id
     var routeName: String,

@@ -9,7 +9,7 @@ import java.time.Duration
 @Entity
 @Table(name = "shuttle_route_stop")
 @IdClass(ShuttleRouteStopPK::class)
-data class RouteStop (
+data class ShuttleRouteStop (
     @Column(name = "route_name")
     @Id
     val routeName: String,

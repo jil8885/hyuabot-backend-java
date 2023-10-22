@@ -1,6 +1,6 @@
 package app.hyuabot.backend.repository
 
-import app.hyuabot.backend.domain.User
+import app.hyuabot.backend.domain.admin.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

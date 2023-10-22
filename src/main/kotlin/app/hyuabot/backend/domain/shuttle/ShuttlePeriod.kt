@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "shuttle_period")
 @IdClass(ShuttlePeriodPK::class)
-data class Period (
+data class ShuttlePeriod (
     @Column(name = "period_type")
     @Id
     var periodType: String,

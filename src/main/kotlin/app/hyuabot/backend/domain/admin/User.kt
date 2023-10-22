@@ -1,4 +1,4 @@
-package app.hyuabot.backend.domain
+package app.hyuabot.backend.domain.admin
 
 import app.hyuabot.backend.dto.request.SignUpRequest
 import jakarta.persistence.Column

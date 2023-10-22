@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "shuttle_stop")
-data class Stop (
+data class ShuttleStop (
     @Column(name = "stop_name")
     @Id
     val stopName: String,

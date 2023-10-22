@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "shuttle_period_type")
-data class PeriodType (
+data class ShuttlePeriodType (
     @Id
     @Column(name = "period_type")
     val periodType: String,

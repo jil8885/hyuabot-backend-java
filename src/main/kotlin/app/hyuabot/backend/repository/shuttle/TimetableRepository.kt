@@ -1,8 +1,8 @@
 package app.hyuabot.backend.repository.shuttle
 
-import app.hyuabot.backend.domain.shuttle.Timetable
+import app.hyuabot.backend.domain.shuttle.ShuttleTimetable
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface TimetableRepository: JpaRepository<Timetable, Int> {
-    fun findAllByRouteNameAndPeriodType(routeName: String, periodType: String): List<Timetable>
+interface TimetableRepository: JpaRepository<ShuttleTimetable, Int> {
+    fun findAllByRouteNameAndPeriodType(routeName: String, periodType: String): List<ShuttleTimetable>
 }

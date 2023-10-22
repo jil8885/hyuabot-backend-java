@@ -1,9 +1,9 @@
 package app.hyuabot.backend.controller
 
-import app.hyuabot.backend.domain.shuttle.Route
-import app.hyuabot.backend.domain.shuttle.RouteStop
-import app.hyuabot.backend.domain.shuttle.Stop
-import app.hyuabot.backend.domain.shuttle.Timetable
+import app.hyuabot.backend.domain.shuttle.ShuttleRoute
+import app.hyuabot.backend.domain.shuttle.ShuttleRouteStop
+import app.hyuabot.backend.domain.shuttle.ShuttleStop
+import app.hyuabot.backend.domain.shuttle.ShuttleTimetable
 import app.hyuabot.backend.dto.database.ShuttlePeriodPK
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteRequest
 import app.hyuabot.backend.dto.request.shuttle.PatchRouteStopRequest
@@ -61,7 +61,7 @@ class ShuttleAPIController(
         "/timetable",
         produces = ["application/json"],
     )
-    fun postShuttleTimetable(@RequestBody payload: Timetable): ResponseEntity<String> {
+    fun postShuttleTimetable(@RequestBody payload: ShuttleTimetable): ResponseEntity<String> {
         return try {
             val query = shuttleService.postShuttleTimetable(payload)
             ResponseEntity
@@ -208,7 +208,7 @@ class ShuttleAPIController(
     fun postShuttlePeriod(@RequestBody payload: ShuttlePeriodItem): ResponseEntity<String> {
         return try {
             shuttleService.postShuttlePeriod(
-                app.hyuabot.backend.domain.shuttle.Period(
+                app.hyuabot.backend.domain.shuttle.ShuttlePeriod(
                     periodType = payload.period,
                     periodStart = LocalDateTime.parse(payload.start),
                     periodEnd = LocalDateTime.parse(payload.end),
@@ -276,7 +276,7 @@ class ShuttleAPIController(
     }
 
     @PostMapping("/route", produces = ["application/json"])
-    fun postShuttleRoute(@RequestBody payload: Route): ResponseEntity<String> {
+    fun postShuttleRoute(@RequestBody payload: ShuttleRoute): ResponseEntity<String> {
         return try {
             shuttleService.postShuttleRoute(payload)
             ResponseEntity
@@ -357,7 +357,7 @@ class ShuttleAPIController(
     @PostMapping("/route/{name}/stop", produces = ["application/json"])
     fun postShuttleRouteStop(
         @PathVariable("name") name: String,
-        @RequestBody payload: RouteStop,
+        @RequestBody payload: ShuttleRouteStop,
     ): ResponseEntity<String> {
         return try {
             shuttleService.postShuttleRouteStop(payload)
@@ -437,7 +437,7 @@ class ShuttleAPIController(
     }
 
     @PostMapping("/stop", produces = ["application/json"])
-    fun postShuttleStop(@RequestBody payload: Stop): ResponseEntity<String> {
+    fun postShuttleStop(@RequestBody payload: ShuttleStop): ResponseEntity<String> {
         return try {
             shuttleService.postShuttleStop(payload)
             ResponseEntity

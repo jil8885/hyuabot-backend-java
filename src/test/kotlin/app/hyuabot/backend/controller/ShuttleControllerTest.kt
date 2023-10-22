@@ -64,16 +64,16 @@ class ShuttleControllerTest {
             active = true
             userRepository.save(this)
         }
-        shuttleHolidayRepository.save(Holiday(testDate, "weekends", "test"))
-        shuttlePeriodTypeRepository.save(PeriodType("test"))
-        shuttlePeriodRepository.save(Period("test", testStartDateTime, testEndDateTime))
-        shuttleStopRepository.save(Stop("startStop", 0.0, 0.0))
-        shuttleStopRepository.save(Stop("endStop", 0.0, 0.0))
-        shuttleStopRepository.save(Stop("testStop", 0.0, 0.0))
-        shuttleRouteRepository.save(Route("test", "test", "test", "test", "startStop", "endStop"))
-        shuttleRouteStopRepository.save(RouteStop("test", "startStop", 0, Duration.ofMinutes(0)))
-        shuttleRouteStopRepository.save(RouteStop("test", "endStop", 1, Duration.ofMinutes(10)))
-        shuttleTimetableRepository.save(Timetable(9999, "test", true, "test", LocalTime.now()))
+        shuttleHolidayRepository.save(ShuttleHoliday(testDate, "weekends", "test"))
+        shuttlePeriodTypeRepository.save(ShuttlePeriodType("test"))
+        shuttlePeriodRepository.save(ShuttlePeriod("test", testStartDateTime, testEndDateTime))
+        shuttleStopRepository.save(ShuttleStop("startStop", 0.0, 0.0))
+        shuttleStopRepository.save(ShuttleStop("endStop", 0.0, 0.0))
+        shuttleStopRepository.save(ShuttleStop("testStop", 0.0, 0.0))
+        shuttleRouteRepository.save(ShuttleRoute("test", "test", "test", "test", "startStop", "endStop"))
+        shuttleRouteStopRepository.save(ShuttleRouteStop("test", "startStop", 0, Duration.ofMinutes(0)))
+        shuttleRouteStopRepository.save(ShuttleRouteStop("test", "endStop", 1, Duration.ofMinutes(10)))
+        shuttleTimetableRepository.save(ShuttleTimetable(9999, "test", true, "test", LocalTime.now()))
     }
 
     @AfterEach
@@ -359,7 +359,7 @@ class ShuttleControllerTest {
             MockMvcRequestBuilders.post("/api/shuttle/route")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Route("test", "test", "test", "test", "startStop", "endStop")
+                    ShuttleRoute("test", "test", "test", "test", "startStop", "endStop")
                 ))
         )
         .andDo(print())
@@ -374,7 +374,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Route("test", "test", "test", "test", "startStop", "endStop")
+                    ShuttleRoute("test", "test", "test", "test", "startStop", "endStop")
                 ))
         )
         .andDo(print())
@@ -391,7 +391,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Route("test2", "test", "test", "test", "startStop", "endStop")
+                    ShuttleRoute("test2", "test", "test", "test", "startStop", "endStop")
                 ))
         )
         .andDo(print())
@@ -523,7 +523,7 @@ class ShuttleControllerTest {
             MockMvcRequestBuilders.post("/api/shuttle/stop")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("test", 0.0, 0.0)
+                    ShuttleStop("test", 0.0, 0.0)
                 ))
         )
         .andDo(print())
@@ -538,7 +538,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("startStop", 0.0, 0.0)
+                    ShuttleStop("startStop", 0.0, 0.0)
                 ))
         )
         .andDo(print())
@@ -555,7 +555,7 @@ class ShuttleControllerTest {
                 .header("Authorization", getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Response.objectMapper.writeValueAsString(
-                    Stop("test2", 0.0, 0.0)
+                    ShuttleStop("test2", 0.0, 0.0)
                 ))
         )
         .andDo(print())

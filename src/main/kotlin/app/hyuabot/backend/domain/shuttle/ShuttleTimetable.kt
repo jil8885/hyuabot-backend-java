@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 @Entity
 @Table(name = "shuttle_timetable")
-data class Timetable (
+data class ShuttleTimetable (
     @Column(name = "seq")
     @Id
     val seq: Int,

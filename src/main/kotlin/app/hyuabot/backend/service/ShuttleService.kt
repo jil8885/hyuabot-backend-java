@@ -49,7 +49,7 @@ class ShuttleService(
             )
         } else {
             shuttleHolidayRepository.save(
-                Holiday(
+                ShuttleHoliday(
                     LocalDate.parse(item.date),
                     item.type,
                     item.calendar,
@@ -78,7 +78,7 @@ class ShuttleService(
     }
 
     @Transactional
-    fun postShuttlePeriod(item: Period) {
+    fun postShuttlePeriod(item: ShuttlePeriod) {
         if (shuttlePeriodRepository.existsById(
             ShuttlePeriodPK(
                 periodType = item.periodType,
@@ -100,10 +100,10 @@ class ShuttleService(
     }
 
     @Transactional
-    fun getShuttleRoute(): List<Route> = shuttleRouteRepository.findAll()
+    fun getShuttleRoute(): List<ShuttleRoute> = shuttleRouteRepository.findAll()
 
     @Transactional
-    fun postShuttleRoute(item: Route) {
+    fun postShuttleRoute(item: ShuttleRoute) {
         if (shuttleRouteRepository.existsById(item.routeName)) {
             throw Exception(
                 "DUPLICATED"
@@ -137,10 +137,10 @@ class ShuttleService(
     }
 
     @Transactional
-    fun getShuttleStop(): List<Stop> = shuttleStopRepository.findAll()
+    fun getShuttleStop(): List<ShuttleStop> = shuttleStopRepository.findAll()
 
     @Transactional
-    fun postShuttleStop(item: Stop) {
+    fun postShuttleStop(item: ShuttleStop) {
         if (shuttleStopRepository.existsById(item.stopName)) {
             throw Exception(
                 "DUPLICATED"
@@ -180,7 +180,7 @@ class ShuttleService(
     }
 
     @Transactional
-    fun postShuttleRouteStop(item: RouteStop) {
+    fun postShuttleRouteStop(item: ShuttleRouteStop) {
         if (shuttleRouteStopRepository.existsById(ShuttleRouteStopPK(
             routeName = item.routeName,
             stopName = item.stopName,
@@ -235,7 +235,7 @@ class ShuttleService(
     }
 
     @Transactional
-    fun postShuttleTimetable(item: Timetable) {
+    fun postShuttleTimetable(item: ShuttleTimetable) {
         if (shuttleTimetableRepository.existsById(item.seq)) {
             throw Exception(
                 "DUPLICATED"
