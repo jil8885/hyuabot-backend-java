@@ -39,13 +39,13 @@ data class BusRoute (
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "route")
     @ToStringExclude
-    val stops: List<BusRouteStop>,
+    val stops: List<BusRouteStop>? = null,
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "start_stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false)
-    val startStop: BusStop,
+    val startStop: BusStop? = null,
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "end_stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false)
-    val endStop: BusStop,
+    val endStop: BusStop? = null,
 )

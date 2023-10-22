@@ -26,5 +26,5 @@ data class SubwayTimetable (
 
     @ManyToOne
     @JoinColumn(name = "station_id", referencedColumnName = "station_id")
-    val station: SubwayRouteStation,
+    val station: SubwayRouteStation? = null,
 )

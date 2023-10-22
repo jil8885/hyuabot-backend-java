@@ -1,9 +1,6 @@
 package app.hyuabot.backend.domain.admin
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 
@@ -11,6 +8,7 @@ import java.time.LocalDateTime
 @Table(name = "notices")
 data class Notice (
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
     val id: Int,
     @Column(name = "category_id")
@@ -23,4 +21,6 @@ data class Notice (
     var expiredAt: LocalDateTime,
     @Column(name = "user_id")
     var createdBy: String,
-)
+) {
+    constructor(categoryID: Int, title: String, url: String, expiredAt: LocalDateTime, createdBy: String) : this(0, categoryID, title, url, expiredAt, createdBy)
+}

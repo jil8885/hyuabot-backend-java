@@ -24,5 +24,5 @@ data class BusStop (
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stop")
     @ToStringExclude
-    val routes: List<BusRouteStop>,
+    val routes: List<BusRouteStop> = emptyList(),
 )

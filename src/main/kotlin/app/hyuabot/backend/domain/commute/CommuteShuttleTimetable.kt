@@ -1,13 +1,7 @@
 package app.hyuabot.backend.domain.commute
 
 import app.hyuabot.backend.dto.database.CommuteShuttleTimetablePK
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.IdClass
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalTime
 
 @Entity
@@ -21,15 +15,15 @@ data class CommuteShuttleTimetable (
     @Column(name = "stop_name")
     val stopName: String,
     @Column(name = "stop_order")
-    val seq: Int,
+    var seq: Int,
     @Column(name = "departure_time")
-    val departureTime: LocalTime,
+    var departureTime: LocalTime,
 
     @OneToOne(optional = false)
     @JoinColumn(name = "route_name", referencedColumnName = "route_name", insertable = false, updatable = false)
-    val commuteShuttleRoute: CommuteShuttleRoute,
+    val commuteShuttleRoute: CommuteShuttleRoute? = null,
 
     @OneToOne(optional = false)
     @JoinColumn(name = "stop_name", referencedColumnName = "stop_name", insertable = false, updatable = false)
-    val commuteShuttleStop: CommuteShuttleStop,
+    val commuteShuttleStop: CommuteShuttleStop? = null,
 )

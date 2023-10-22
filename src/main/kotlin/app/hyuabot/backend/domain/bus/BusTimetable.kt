@@ -26,5 +26,5 @@ data class BusTimetable (
         JoinColumn(name = "route_id", referencedColumnName = "route_id"),
         JoinColumn(name = "start_stop_id", referencedColumnName = "start_stop_id"),
     )
-    val routeStop: BusRouteStop
+    val routeStop: BusRouteStop? = null,
 )

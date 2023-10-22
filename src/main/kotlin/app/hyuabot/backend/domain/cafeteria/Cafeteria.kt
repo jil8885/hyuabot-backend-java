@@ -11,19 +11,19 @@ data class Cafeteria (
     @Column(name = "restaurant_id")
     val id: Int,
     @Column(name = "restaurant_name")
-    val name: String,
+    var name: String,
     @Column(name = "campus_id")
-    val campusID: Int,
+    var campusID: Int,
     @Column(name = "latitude")
-    val latitude: Double,
+    var latitude: Double,
     @Column(name = "longitude")
-    val longitude: Double,
+    var longitude: Double,
 
     @ManyToOne
     @JoinColumn(name = "campus_id", referencedColumnName = "campus_id", insertable = false, updatable = false)
-    val campus: Campus,
+    val campus: Campus? = null,
 
     @OneToMany(mappedBy = "cafeteria", fetch = FetchType.LAZY)
     @ToStringExclude
-    val menuList: List<Menu>,
+    val menuList: List<Menu> = emptyList(),
 )

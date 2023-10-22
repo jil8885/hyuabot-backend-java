@@ -12,5 +12,5 @@ data class SubwayStation (
 
     @OneToMany(mappedBy = "station")
     @ToStringExclude
-    val routes: List<SubwayRouteStation>,
+    val routes: List<SubwayRouteStation> = emptyList(),
 )

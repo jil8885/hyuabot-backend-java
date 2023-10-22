@@ -13,28 +13,28 @@ data class SubwayRouteStation (
     @Column(name = "station_id")
     val id: String,
     @Column(name = "station_name")
-    val name: String,
+    var name: String,
     @Column(name = "route_id")
-    val routeID: Int,
+    var routeID: Int,
     @Column(name = "station_sequence")
-    val seq: Int,
+    var seq: Int,
     @Column(name = "cumulative_time", columnDefinition = "interval")
     @Type(PostgreSQLIntervalType::class)
-    val cumulativeTime: Duration,
+    var cumulativeTime: Duration,
 
     @ManyToOne
     @JoinColumn(name = "station_name", referencedColumnName = "station_name", insertable = false, updatable = false)
-    val station: SubwayStation,
+    val station: SubwayStation? = null,
 
     @ManyToOne
     @JoinColumn(name = "route_id", referencedColumnName = "route_id", insertable = false, updatable = false)
-    val route: SubwayRoute,
+    val route: SubwayRoute? = null,
 
     @OneToMany(mappedBy = "station", fetch = FetchType.LAZY)
     @ToStringExclude
-    val timetable: List<SubwayTimetable>,
+    val timetable: List<SubwayTimetable> = emptyList(),
 
     @OneToMany(mappedBy = "station", fetch = FetchType.LAZY)
     @ToStringExclude
-    val realtime: List<SubwayRealtime>,
+    val realtime: List<SubwayRealtime> = emptyList(),
 )

@@ -12,7 +12,7 @@ data class CommuteShuttleRoute (
     @Column(name = "route_name")
     val name: String,
     @Column(name = "route_description_korean")
-    val descriptionKorean: String,
+    var descriptionKorean: String,
     @Column(name = "route_description_english")
-    val descriptionEnglish: String,
+    var descriptionEnglish: String,
 )

@@ -4,6 +4,7 @@ import app.hyuabot.backend.dto.database.BusRealtimePK
 import io.hypersistence.utils.hibernate.type.interval.PostgreSQLIntervalType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
+import java.time.Duration
 import java.time.LocalDateTime
 
 @Entity
@@ -25,7 +26,7 @@ data class BusRealtime (
     val seat: Int,
     @Column(name = "remaining_time", columnDefinition = "interval")
     @Type(PostgreSQLIntervalType::class)
-    val time: String,
+    val time: Duration,
     @Column(name = "low_plate")
     val lowFloor: Boolean,
     @Column(name = "last_updated_time")
@@ -36,5 +37,5 @@ data class BusRealtime (
         JoinColumn(name = "route_id", referencedColumnName = "route_id"),
         JoinColumn(name = "stop_id", referencedColumnName = "stop_id"),
     )
-    val routeStop: BusRouteStop
+    val routeStop: BusRouteStop? = null,
 )

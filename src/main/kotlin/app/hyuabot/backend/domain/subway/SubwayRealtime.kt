@@ -4,6 +4,7 @@ import app.hyuabot.backend.dto.database.SubwayRealtimePK
 import io.hypersistence.utils.hibernate.type.interval.PostgreSQLIntervalType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
+import java.time.Duration
 import java.time.LocalDateTime
 
 @Entity
@@ -25,7 +26,7 @@ data class SubwayRealtime (
     val stop: Int,
     @Column(name = "remaining_time", columnDefinition = "interval")
     @Type(PostgreSQLIntervalType::class)
-    val time: String,
+    val time: Duration,
     @Column(name = "terminal_station_id")
     val terminalStationID: String,
     @Column(name = "train_number")
@@ -41,5 +42,5 @@ data class SubwayRealtime (
 
     @ManyToOne
     @JoinColumn(name = "station_id", referencedColumnName = "station_id")
-    val station: SubwayRouteStation,
+    val station: SubwayRouteStation? = null,
 )

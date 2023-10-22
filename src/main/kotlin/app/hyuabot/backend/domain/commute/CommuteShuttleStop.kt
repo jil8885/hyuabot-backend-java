@@ -12,9 +12,9 @@ data class CommuteShuttleStop (
     @Column(name = "stop_name")
     val name: String,
     @Column(name = "description")
-    val description: String,
+    var description: String,
     @Column(name = "latitude")
-    val latitude: Double,
+    var latitude: Double,
     @Column(name = "longitude")
-    val longitude: Double,
+    var longitude: Double,
 )

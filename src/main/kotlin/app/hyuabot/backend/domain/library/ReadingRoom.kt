@@ -13,7 +13,7 @@ data class ReadingRoom (
     @Column(name = "room_name")
     var name: String,
     @Column(name = "campus_id")
-    val campusID: Int,
+    var campusID: Int,
     @Column(name = "is_active")
     var isActive: Boolean,
     @Column(name = "is_reservable")
@@ -31,5 +31,5 @@ data class ReadingRoom (
 
     @ManyToOne
     @JoinColumn(name = "campus_id", referencedColumnName = "campus_id", insertable = false, updatable = false)
-    val campus: Campus,
+    val campus: Campus? = null,
 )

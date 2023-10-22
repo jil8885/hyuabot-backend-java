@@ -21,9 +21,9 @@ data class Menu (
     @Column(name = "menu_food")
     val menu: String,
     @Column(name = "menu_price")
-    val price: String,
+    var price: String,
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id", insertable = false, updatable = false)
-    val cafeteria: Cafeteria,
+    val cafeteria: Cafeteria? = null,
 )

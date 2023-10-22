@@ -10,9 +10,9 @@ data class SubwayRoute (
     @Column(name = "route_id")
     val id: Int,
     @Column(name = "route_name")
-    val name: String,
+    var name: String,
 
     @OneToMany(mappedBy = "route")
     @ToStringExclude
-    val stations: List<SubwayRouteStation>,
+    val stations: List<SubwayRouteStation>? = emptyList(),
 )
