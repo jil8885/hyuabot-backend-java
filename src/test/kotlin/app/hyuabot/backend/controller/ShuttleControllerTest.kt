@@ -9,7 +9,7 @@ import app.hyuabot.backend.dto.request.shuttle.*
 import app.hyuabot.backend.dto.response.Response
 import app.hyuabot.backend.dto.response.ShuttleHolidayItem
 import app.hyuabot.backend.dto.response.ShuttlePeriodItem
-import app.hyuabot.backend.repository.UserRepository
+import app.hyuabot.backend.repository.admin.UserRepository
 import app.hyuabot.backend.repository.shuttle.*
 import app.hyuabot.backend.service.UserService
 import org.junit.jupiter.api.AfterEach
@@ -39,13 +39,13 @@ class ShuttleControllerTest {
     @Autowired private lateinit var mockmvc: MockMvc
     @Autowired private lateinit var userService: UserService
     @Autowired private lateinit var userRepository: UserRepository
-    @Autowired private lateinit var shuttleHolidayRepository: HolidayRepository
-    @Autowired private lateinit var shuttlePeriodTypeRepository: PeriodTypeRepository
-    @Autowired private lateinit var shuttlePeriodRepository: PeriodRepository
-    @Autowired private lateinit var shuttleRouteRepository: RouteRepository
-    @Autowired private lateinit var shuttleRouteStopRepository: RouteStopRepository
-    @Autowired private lateinit var shuttleStopRepository: StopRepository
-    @Autowired private lateinit var shuttleTimetableRepository: TimetableRepository
+    @Autowired private lateinit var shuttleHolidayRepository: ShuttleHolidayRepository
+    @Autowired private lateinit var shuttlePeriodTypeRepository: ShuttlePeriodTypeRepository
+    @Autowired private lateinit var shuttlePeriodRepository: ShuttlePeriodRepository
+    @Autowired private lateinit var shuttleRouteRepository: ShuttleRouteRepository
+    @Autowired private lateinit var shuttleRouteStopRepository: ShuttleRouteStopRepository
+    @Autowired private lateinit var shuttleStopRepository: ShuttleStopRepository
+    @Autowired private lateinit var shuttleTimetableRepository: ShuttleTimetableRepository
     private val testDate = LocalDate.of(2999, 1, 1)
     private val testStartDateTime = testDate.atTime(0, 0)
     private val testEndDateTime = testDate.atTime(23, 59)

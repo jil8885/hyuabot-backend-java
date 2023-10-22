@@ -21,13 +21,13 @@ import java.time.LocalTime
 @Service
 @Transactional(readOnly = true)
 class ShuttleService(
-    private val shuttleHolidayRepository: HolidayRepository,
-    private val shuttlePeriodRepository: PeriodRepository,
-    private val shuttleRouteRepository: RouteRepository,
-    private val shuttleRouteStopRepository: RouteStopRepository,
-    private val shuttleStopRepository: StopRepository,
-    private val shuttleTimetableRepository: TimetableRepository,
-    private val shuttleTimetableViewRepository: TimetableViewRepository,
+    private val shuttleHolidayRepository: ShuttleHolidayRepository,
+    private val shuttlePeriodRepository: ShuttlePeriodRepository,
+    private val shuttleRouteRepository: ShuttleRouteRepository,
+    private val shuttleRouteStopRepository: ShuttleRouteStopRepository,
+    private val shuttleStopRepository: ShuttleStopRepository,
+    private val shuttleTimetableRepository: ShuttleTimetableRepository,
+    private val shuttleTimetableViewRepository: ShuttleTimetableViewRepository,
 ) {
     @Transactional
     fun getShuttleHoliday(): List<ShuttleHolidayItem> {

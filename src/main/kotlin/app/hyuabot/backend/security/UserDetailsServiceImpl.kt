@@ -1,6 +1,6 @@
 package app.hyuabot.backend.security
 
-import app.hyuabot.backend.repository.UserRepository
+import app.hyuabot.backend.repository.admin.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

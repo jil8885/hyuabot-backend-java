@@ -3,7 +3,7 @@ package app.hyuabot.backend.controller
 import app.hyuabot.backend.dto.request.LoginRequest
 import app.hyuabot.backend.dto.request.SignUpRequest
 import app.hyuabot.backend.dto.response.Response
-import app.hyuabot.backend.repository.UserRepository
+import app.hyuabot.backend.repository.admin.UserRepository
 import app.hyuabot.backend.service.UserService
 import jakarta.servlet.http.Cookie
 import org.junit.jupiter.api.AfterEach

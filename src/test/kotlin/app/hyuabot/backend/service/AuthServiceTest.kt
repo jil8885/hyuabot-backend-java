@@ -1,7 +1,7 @@
 package app.hyuabot.backend.service
 
 import app.hyuabot.backend.dto.request.SignUpRequest
-import app.hyuabot.backend.repository.UserRepository
+import app.hyuabot.backend.repository.admin.UserRepository
 import app.hyuabot.backend.security.JWTTokenProvider
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse

@@ -1,4 +1,4 @@
-package app.hyuabot.backend.repository
+package app.hyuabot.backend.repository.admin
 
 import app.hyuabot.backend.domain.admin.User
 import org.springframework.data.jpa.repository.JpaRepository
