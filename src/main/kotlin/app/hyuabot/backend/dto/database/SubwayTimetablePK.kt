@@ -4,8 +4,8 @@ import java.io.Serializable
 import java.time.LocalTime
 
 data class SubwayTimetablePK (
-    val stationID: String,
-    val heading: String,
-    val weekdays: String,
-    val departureTime: LocalTime,
+    val stationID: String = "",
+    val heading: String = "",
+    val weekdays: String = "",
+    val departureTime: LocalTime = LocalTime.MIN,
 ) : Serializable

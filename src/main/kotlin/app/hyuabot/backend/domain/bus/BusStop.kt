@@ -1,7 +1,9 @@
 package app.hyuabot.backend.domain.bus
 
-import jakarta.persistence.*
-import org.apache.commons.lang3.builder.ToStringExclude
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "bus_stop")
@@ -21,8 +23,4 @@ data class BusStop (
     var mobileNumber: String,
     @Column(name = "region_name")
     var regionName: String,
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "stop")
-    @ToStringExclude
-    val routes: List<BusRouteStop> = emptyList(),
 )

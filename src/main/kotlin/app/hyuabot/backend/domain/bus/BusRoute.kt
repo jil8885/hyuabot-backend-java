@@ -1,7 +1,6 @@
 package app.hyuabot.backend.domain.bus
 
 import jakarta.persistence.*
-import org.apache.commons.lang3.builder.ToStringExclude
 import java.time.LocalTime
 
 @Entity
@@ -37,15 +36,11 @@ data class BusRoute (
     @Column(name = "company_telephone")
     var companyTelephone: String,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "route")
-    @ToStringExclude
-    val stops: List<BusRouteStop>? = null,
-
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "start_stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false)
-    val startStop: BusStop? = null,
+    var startStop: BusStop? = null,
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "end_stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false)
-    val endStop: BusStop? = null,
+    var endStop: BusStop? = null,
 )

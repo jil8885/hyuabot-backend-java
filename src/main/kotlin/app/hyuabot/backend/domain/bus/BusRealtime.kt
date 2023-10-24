@@ -32,10 +32,10 @@ data class BusRealtime (
     @Column(name = "last_updated_time")
     val updatedAt: LocalDateTime,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(
-        JoinColumn(name = "route_id", referencedColumnName = "route_id"),
-        JoinColumn(name = "stop_id", referencedColumnName = "stop_id"),
+        JoinColumn(name = "route_id", referencedColumnName = "route_id", insertable = false, updatable = false),
+        JoinColumn(name = "stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false),
     )
-    val routeStop: BusRouteStop? = null,
+    var routeStop: BusRouteStop? = null,
 )

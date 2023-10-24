@@ -9,6 +9,10 @@ interface NoticeRepository : JpaRepository<Notice, Int> {
         return getNoticesByCategoryID(categoryID).filter { it.expiredAt > LocalDateTime.now() }
     }
 
+    fun deleteAllByCategoryID(categoryID: Int)
+    fun deleteAllByTitle(title: String)
+    fun existsByTitle(title: String): Boolean
+
     override fun findAll(): List<Notice> {
         return findAll().filter { it.expiredAt > LocalDateTime.now() }
     }

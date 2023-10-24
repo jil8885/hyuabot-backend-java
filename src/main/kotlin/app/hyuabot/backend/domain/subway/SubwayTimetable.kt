@@ -12,19 +12,16 @@ data class SubwayTimetable (
     @Column(name = "station_id")
     val stationID: String,
     @Column(name = "start_station_id")
-    val startStationID: String,
+    var startStationID: String,
     @Column(name = "terminal_station_id")
-    val terminalStationID: String,
+    var terminalStationID: String,
     @Id
     @Column(name = "weekday")
     val weekdays: String,
     @Id
     @Column(name = "up_down_type")
     val heading: String,
+    @Id
     @Column(name = "departure_time")
     val departureTime: LocalTime,
-
-    @ManyToOne
-    @JoinColumn(name = "station_id", referencedColumnName = "station_id")
-    val station: SubwayRouteStation? = null,
 )

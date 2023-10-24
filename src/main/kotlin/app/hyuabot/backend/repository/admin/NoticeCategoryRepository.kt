@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface NoticeCategoryRepository : JpaRepository<NoticeCategory, Int> {
     fun existsByName(name: String): Boolean
+    fun deleteByName(name: String)
 }

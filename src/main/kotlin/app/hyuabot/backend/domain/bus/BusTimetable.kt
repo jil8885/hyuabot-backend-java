@@ -21,10 +21,10 @@ data class BusTimetable (
     @Column(name = "departure_time")
     val departureTime: LocalTime,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(
-        JoinColumn(name = "route_id", referencedColumnName = "route_id"),
-        JoinColumn(name = "start_stop_id", referencedColumnName = "start_stop_id"),
+        JoinColumn(name = "route_id", referencedColumnName = "route_id", insertable = false, updatable = false),
+        JoinColumn(name = "start_stop_id", referencedColumnName = "stop_id", insertable = false, updatable = false),
     )
-    val routeStop: BusRouteStop? = null,
+    var routeStop: BusRouteStop? = null,
 )

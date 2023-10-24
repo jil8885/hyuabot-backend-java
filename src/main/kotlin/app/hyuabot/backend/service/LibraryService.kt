@@ -14,7 +14,7 @@ class LibraryService(private val readingRoomRepository: ReadingRoomRepository) {
 
     @Transactional
     fun getReadingRoom(roomID: Int): ReadingRoom = readingRoomRepository.findById(roomID).orElseThrow {
-        Exception("NOT_FOUND")
+        Exception("SPECIFIED_ROOM_NOT_FOUND")
     }
 
     @Transactional

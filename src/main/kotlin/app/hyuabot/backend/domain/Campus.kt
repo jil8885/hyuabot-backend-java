@@ -17,10 +17,10 @@ data class Campus (
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "campus")
     @ToStringExclude
     @OrderBy("restaurant_id ASC")
-    val cafeteriaList: List<Cafeteria>,
+    var cafeteriaList: List<Cafeteria> = listOf(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "campus")
     @ToStringExclude
     @OrderBy("room_id ASC")
-    val readingRoomList: List<ReadingRoom>,
+    var readingRoomList: List<ReadingRoom> = listOf(),
 )

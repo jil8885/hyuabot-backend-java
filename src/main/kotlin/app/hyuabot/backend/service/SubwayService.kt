@@ -39,7 +39,9 @@ class SubwayService(
 
     @Transactional
     fun patchSubwayRoute(routeID: Int, name: String?) {
-        subwayRouteRepository.findById(routeID).orElseThrow().let {
+        subwayRouteRepository.findById(routeID).orElseThrow{
+            Exception("NOT_FOUND")
+        }.let {
             it.name = name ?: it.name
             subwayRouteRepository.save(it)
         }
@@ -60,7 +62,9 @@ class SubwayService(
     fun getSubwayStationList(): List<SubwayStation> = subwayStationRepository.findAll()
 
     @Transactional
-    fun getSubwayStationByName(name: String): SubwayStation = subwayStationRepository.findById(name).orElseThrow()
+    fun getSubwayStationByName(name: String): SubwayStation = subwayStationRepository.findById(name).orElseThrow {
+        Exception("NOT_FOUND")
+    }
 
     @Transactional
     fun postSubwayStation(stationName: String): SubwayStation {
@@ -89,10 +93,9 @@ class SubwayService(
     fun getSubwayRouteStationListByRouteID(routeID: Int): List<SubwayRouteStation> = subwayRouteStationRepository.findAllByRouteID(routeID)
 
     @Transactional
-    fun getSubwayRouteStationListByStationID(stationName: String): List<SubwayRouteStation> = subwayRouteStationRepository.findAllByName(stationName)
-
-    @Transactional
-    fun getSubwayRouteStationListByRouteIDAndStationID(routeID: Int, stationName: String): List<SubwayRouteStation> = subwayRouteStationRepository.findAllByRouteIDAndName(routeID, stationName)
+    fun getSubwayRouteStationListByStationID(stationName: String): SubwayRouteStation = subwayRouteStationRepository.findById(stationName).orElseThrow {
+        Exception("NOT_FOUND")
+    }
 
     @Transactional
     fun getSubwayRouteStationByID(stationID: String): SubwayRouteStation = subwayRouteStationRepository.findById(stationID).orElseThrow()
@@ -124,7 +127,9 @@ class SubwayService(
         seq: Int?,
         cumulativeTime: Duration?
     ) {
-        subwayRouteStationRepository.findById(stationID).orElseThrow().let {
+        subwayRouteStationRepository.findById(stationID).orElseThrow{
+            Exception("NOT_FOUND")
+        }.let {
             it.name = stationName ?: it.name
             it.routeID = routeID ?: it.routeID
             it.seq = seq ?: it.seq

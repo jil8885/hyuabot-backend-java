@@ -17,7 +17,7 @@ class CafeteriaService(
     private val menuRepository: MenuRepository,
 ) {
     @Transactional
-    fun getCafeteriaList() = cafeteriaRepository.findAll()
+    fun getCafeteriaList(): List<Cafeteria> = cafeteriaRepository.findAll()
 
     @Transactional
     fun getCafeteriaByCampus(campus: Int) = cafeteriaRepository.findByCampusID(campus)
@@ -26,7 +26,7 @@ class CafeteriaService(
     fun getCafeteria(cafeteriaID: Int) = cafeteriaRepository.findById(cafeteriaID)
 
     @Transactional
-    fun getMenuList() = menuRepository.findAll()
+    fun getMenuList(): List<Menu> = menuRepository.findAll()
 
     @Transactional
     fun getMenuByCafeteria(cafeteriaID: Int) = menuRepository.findByCafeteriaID(cafeteriaID)
@@ -80,12 +80,12 @@ class CafeteriaService(
 
     @Transactional
     fun deleteCafeteria(cafeteriaID: Int) {
-        if (cafeteriaRepository.existsById(cafeteriaID)) {
-            cafeteriaRepository.deleteById(cafeteriaID)
-        } else if (menuRepository.findByCafeteriaID(cafeteriaID).isNotEmpty()) {
+        if (menuRepository.findByCafeteriaID(cafeteriaID).isNotEmpty()) {
             throw Exception(
                 "MENUS_EXIST_IN_CAFETERIA"
             )
+        } else if (cafeteriaRepository.existsById(cafeteriaID)) {
+            cafeteriaRepository.deleteById(cafeteriaID)
         } else {
             throw Exception(
                 "NOT_FOUND"
@@ -132,17 +132,6 @@ class CafeteriaService(
     fun deleteMenu(cafeteriaID: Int, date: LocalDate, type: String, menu: String) {
         if (menuRepository.existsById(MenuPK(cafeteriaID = cafeteriaID, date = date, type = type, menu = menu))) {
             menuRepository.deleteById(MenuPK(cafeteriaID = cafeteriaID, date = date, type = type, menu = menu))
-        } else {
-            throw Exception(
-                "NOT_FOUND"
-            )
-        }
-    }
-
-    @Transactional
-    fun deleteMenuByCafeteria(cafeteriaID: Int) {
-        if (menuRepository.findByCafeteriaID(cafeteriaID).isNotEmpty()) {
-            menuRepository.deleteAllByCafeteriaID(cafeteriaID)
         } else {
             throw Exception(
                 "NOT_FOUND"

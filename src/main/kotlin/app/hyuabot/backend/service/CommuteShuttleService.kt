@@ -19,13 +19,13 @@ class CommuteShuttleService(
     private val commuteShuttleTimetableRepository: CommuteShuttleTimetableRepository,
 ) {
     @Transactional
-    fun getShuttleRouteList() = commuteShuttleRouteRepository.findAll()
+    fun getShuttleRouteList(): List<CommuteShuttleRoute> = commuteShuttleRouteRepository.findAll()
 
     @Transactional
-    fun getShuttleStopList() = commuteShuttleStopRepository.findAll()
+    fun getShuttleStopList(): List<CommuteShuttleStop> = commuteShuttleStopRepository.findAll()
 
     @Transactional
-    fun getShuttleTimetableList() = commuteShuttleTimetableRepository.findAll()
+    fun getShuttleTimetableList(): List<CommuteShuttleTimetable> = commuteShuttleTimetableRepository.findAll()
 
     @Transactional
     fun getShuttleTimetableListByRoute(routeName: String) =
@@ -128,10 +128,10 @@ class CommuteShuttleService(
 
     @Transactional
     fun deleteShuttleRoute(routeName: String) {
-        if (commuteShuttleRouteRepository.existsById(routeName)) {
+        if (commuteShuttleTimetableRepository.findByRouteName(routeName).isNotEmpty()) {
+            throw Exception("ROUTE_HAS_TIMETABLE")
+        } else if (commuteShuttleRouteRepository.existsById(routeName)) {
             commuteShuttleRouteRepository.deleteById(routeName)
-        } else if (commuteShuttleTimetableRepository.findByRouteName(routeName).isNotEmpty()) {
-            throw Exception("ROUTE_HAS_TIMETABLES")
         } else {
             throw Exception("ROUTE_NOT_FOUND")
         }
@@ -139,10 +139,10 @@ class CommuteShuttleService(
 
     @Transactional
     fun deleteShuttleStop(stopName: String) {
-        if (commuteShuttleStopRepository.existsById(stopName)) {
+        if (commuteShuttleTimetableRepository.findByStopName(stopName).isNotEmpty()) {
+            throw Exception("STOP_HAS_TIMETABLE")
+        } else if (commuteShuttleStopRepository.existsById(stopName)) {
             commuteShuttleStopRepository.deleteById(stopName)
-        } else if (commuteShuttleTimetableRepository.findByStopName(stopName).isNotEmpty()) {
-            throw Exception("STOP_HAS_TIMETABLES")
         } else {
             throw Exception("STOP_NOT_FOUND")
         }

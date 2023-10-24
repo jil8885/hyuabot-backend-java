@@ -39,8 +39,4 @@ data class SubwayRealtime (
     val last: Boolean,
     @Column(name = "status_code")
     val status: Int,
-
-    @ManyToOne
-    @JoinColumn(name = "station_id", referencedColumnName = "station_id")
-    val station: SubwayRouteStation? = null,
 )

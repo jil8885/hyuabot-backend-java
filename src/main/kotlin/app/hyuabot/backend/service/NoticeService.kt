@@ -16,17 +16,17 @@ class NoticeService(
     private val noticeCategoryRepository: NoticeCategoryRepository,
 ) {
     @Transactional
-    fun getNoticeCategory(): List<NoticeCategory> = noticeCategoryRepository.findAll()
+    fun getNoticeCategoryList(): List<NoticeCategory> = noticeCategoryRepository.findAll()
 
     @Transactional
-    fun postNoticeCategory(name: String) {
+    fun postNoticeCategory(categoryID: Int, name: String) {
         if (noticeCategoryRepository.existsByName(name)) {
             throw Exception(
                 "DUPLICATED"
             )
         } else {
             noticeCategoryRepository.save(
-                NoticeCategory(name = name)
+                NoticeCategory(id = categoryID, name = name)
             )
         }
     }
@@ -35,8 +35,10 @@ class NoticeService(
     fun deleteNoticeCategory(categoryID: Int) {
         if (noticeRepository.getNoticesByCategoryID(categoryID).isNotEmpty()) {
             throw DataIntegrityViolationException("NOTICES_EXIST_IN_CATEGORY")
-        } else {
+        } else if (noticeRepository.existsById(categoryID)) {
             noticeCategoryRepository.deleteById(categoryID)
+        } else {
+            throw Exception("NOTICE_CATEGORY_NOT_FOUND")
         }
     }
 
@@ -47,9 +49,10 @@ class NoticeService(
     fun getNoticeList(categoryId: Int): List<Notice> = noticeRepository.getNoticesByCategoryID(categoryId)
 
     @Transactional
-    fun postNotice(categoryId: Int, title: String, url: String, expiredAt: LocalDateTime, createdBy: String) {
+    fun postNotice(noticeID: Int, categoryId: Int, title: String, url: String, expiredAt: LocalDateTime, createdBy: String) {
         noticeRepository.save(
             Notice(
+                id = noticeID,
                 categoryID = categoryId,
                 title = title,
                 url = url,

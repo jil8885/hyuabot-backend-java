@@ -8,5 +8,4 @@ data class MenuPK (
     var date: LocalDate = LocalDate.now(),
     var type: String = "",
     var menu: String = "",
-    var price: String = "",
 ): Serializable

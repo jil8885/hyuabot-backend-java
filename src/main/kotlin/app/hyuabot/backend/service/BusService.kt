@@ -5,6 +5,7 @@ import app.hyuabot.backend.dto.database.BusRealtimePK
 import app.hyuabot.backend.dto.database.BusRouteStopPK
 import app.hyuabot.backend.dto.database.BusTimetablePK
 import app.hyuabot.backend.repository.bus.*
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
@@ -81,19 +82,19 @@ class BusService(
     @Transactional
     fun patchBusRoute(
         routeID: Int,
-        name: String?,
-        typeName: String?,
-        typeCode: String?,
-        startStopID: Int?,
-        endStopID: Int?,
-        upFirstTime: LocalTime?,
-        upLastTime: LocalTime?,
-        downFirstTime: LocalTime?,
-        downLastTime: LocalTime?,
-        districtCode: Int?,
-        companyID: Int?,
-        companyName: String?,
-        companyTelephone: String?,
+        name: String? = null,
+        typeName: String? = null,
+        typeCode: String? = null,
+        startStopID: Int? = null,
+        endStopID: Int? = null,
+        upFirstTime: LocalTime? = null,
+        upLastTime: LocalTime? = null,
+        downFirstTime: LocalTime? = null,
+        downLastTime: LocalTime? = null,
+        districtCode: Int? = null,
+        companyID: Int? = null,
+        companyName: String? = null,
+        companyTelephone: String? = null,
     ) {
         if (busRouteRepository.existsById(routeID)) {
             busRouteRepository.findById(routeID).map {
@@ -114,7 +115,7 @@ class BusService(
             }
         } else {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         }
     }
@@ -123,18 +124,14 @@ class BusService(
     fun deleteBusRoute(routeID: Int) {
         if (!busRouteRepository.existsById(routeID)) {
             throw Exception(
-                "NOT FOUND"
-            )
-        } else if (busRouteStopRepository.existsByRouteID(routeID)) {
-            throw Exception(
-                "BUS_ROUTE_STOP_EXISTS"
+                "NOT_FOUND"
             )
         } else if (busTimetableRepository.existsByRouteID(routeID)) {
             throw Exception(
                 "BUS_TIMETABLE_EXISTS"
             )
         } else {
-            busRouteRepository.deleteById(routeID)
+            busRouteRepository.deleteAllByIdInBatch(listOf(routeID))
         }
     }
 
@@ -196,23 +193,29 @@ class BusService(
             }
         } else {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         }
     }
 
     @Transactional
     fun deleteBusStop(stopID: Int) {
-        if (!busStopRepository.existsById(stopID)) {
+        try {
+            if (!busStopRepository.existsById(stopID)) {
+                throw Exception(
+                    "NOT_FOUND"
+                )
+            } else if (busRouteStopRepository.existsByStopID(stopID)) {
+                throw Exception(
+                    "BUS_ROUTE_STOP_EXISTS"
+                )
+            } else {
+                busStopRepository.deleteAllByIdInBatch(listOf(stopID))
+            }
+        } catch (e: DataIntegrityViolationException) {
             throw Exception(
-                "NOT FOUND"
+                "BUS_ROUTE_REFERENCES_STOP"
             )
-        } else if (busRouteStopRepository.existsByStopID(stopID)) {
-            throw Exception(
-                "BUS_ROUTE_STOP_EXISTS"
-            )
-        } else {
-            busStopRepository.deleteById(stopID)
         }
     }
 
@@ -280,7 +283,7 @@ class BusService(
             }
         } else {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         }
     }
@@ -295,7 +298,7 @@ class BusService(
             )
         ) {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         }
 
@@ -354,7 +357,6 @@ class BusService(
     fun postBusTimetable(
         routeID: Int,
         startStopID: Int,
-        stopID: Int,
         weekdays: String,
         departureTime: LocalTime,
     ) {
@@ -399,7 +401,7 @@ class BusService(
             )
         ) {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         } else {
             busTimetableRepository.deleteById(
@@ -465,7 +467,7 @@ class BusService(
             )
         ) {
             throw Exception(
-                "NOT FOUND"
+                "NOT_FOUND"
             )
         } else {
             busRealtimeRepository.deleteById(

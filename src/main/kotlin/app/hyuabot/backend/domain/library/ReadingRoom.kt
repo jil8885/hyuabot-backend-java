@@ -24,10 +24,10 @@ data class ReadingRoom (
     var active: Int,
     @Column(name = "occupied")
     var occupied: Int,
-    @Column(name = "available")
-    var available: Int,
+    @Column(name = "available", insertable = false, updatable = false)
+    var available: Int = active - occupied,
     @Column(name = "last_updated_time")
-    var updatedAt: LocalDateTime,
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne
     @JoinColumn(name = "campus_id", referencedColumnName = "campus_id", insertable = false, updatable = false)
