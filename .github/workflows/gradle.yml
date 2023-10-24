@@ -1,0 +1,95 @@
+name: Spring Boot Gradle CI
+on: [pull_request, push]
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+jobs:
+  Test:
+    runs-on: [self-hosted, X64, Linux]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create database
+        run: |
+          PGPASSWORD='test' psql -h localhost -p 35432 -U test -d hyuabot -f ./scripts/postgres/init.sql
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: 19
+          distribution: 'zulu'
+      - name: Test with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test
+          cache-disabled: true
+      - name: Upload test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          junit_files: '**/build/test-results/test/TEST-*.xml'
+    services:
+      postgres:
+        image: postgres
+        ports:
+        - 35432:5432
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: hyuabot
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis
+        ports:
+        - 36379:6379
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 35432
+      POSTGRES_ID: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: hyuabot
+      REDIS_HOST: localhost
+      REDIS_PORT: 36379
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  Build:
+    runs-on: [self-hosted, X64, Linux]
+    needs:
+      - Test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create database
+        run: |
+          PGPASSWORD='test' psql -h localhost -p 35432 -U test -d hyuabot -f ./scripts/postgres/init.sql
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: 19
+          distribution: 'zulu'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+          cache-disabled: true
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 35432:5432
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: hyuabot
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis
+        ports:
+          - 36379:6379
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 35432
+      POSTGRES_ID: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: hyuabot
+      REDIS_HOST: localhost
+      REDIS_PORT: 36379
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
