@@ -121,7 +121,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1\"\n}")]
             )]
         )
     ])
@@ -153,7 +153,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_HAS_STOPS\",\n  \"path\": \"/api/bus/route/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_HAS_STOPS\",\n  \"path\": \"/api/bus/route/1\"\n}")]
             )]
         ),
         ApiResponse(
@@ -162,7 +162,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1\"\n}")]
             )]
         )
     ])
@@ -272,7 +272,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1\"\n}")]
             )]
         )
     ])
@@ -304,7 +304,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1\"\n}")]
             )]
         ),
         ApiResponse(
@@ -313,7 +313,7 @@ class BusAPIController {
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
-                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_HAS_ROUTES\",\n  \"path\": \"/api/bus/stop/1\",\n}")]
+                examples = [ExampleObject(value = "{\n  \"message\": \"BUS_STOP_HAS_ROUTES\",\n  \"path\": \"/api/bus/stop/1\"\n}")]
             )]
         )
     ])
@@ -402,7 +402,7 @@ class BusAPIController {
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
                 examples = [
-                    ExampleObject(value = "{\n  \"message\": \"BUS_STOP_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1/route/1\",\n}")]
+                    ExampleObject(value = "{\n  \"message\": \"BUS_STOP_ROUTE_NOT_FOUND\",\n  \"path\": \"/api/bus/stop/1/route/1\"\n}")]
             )]
         )
     ])
@@ -498,7 +498,7 @@ class BusAPIController {
                 mediaType = "application/json",
                 schema = Schema(implementation = Response.ErrorResponse::class),
                 examples = [
-                    ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_TIMETABLE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1/timetable/1\",\n}")]
+                    ExampleObject(value = "{\n  \"message\": \"BUS_ROUTE_TIMETABLE_NOT_FOUND\",\n  \"path\": \"/api/bus/route/1/timetable/1\"\n}")]
             )]
         )
     ])
